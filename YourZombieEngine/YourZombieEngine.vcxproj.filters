@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{7497eda0-5290-4b5c-8461-864ee8af63c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{93cacc96-375b-43db-b957-efed9913a55b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Math">
+      <UniqueIdentifier>{b0aad57b-be9b-46c1-a298-d4be64f2131e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Scene">
+      <UniqueIdentifier>{473d07d8-ccad-4f98-90d7-a951e624daa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Scene\Physics">
+      <UniqueIdentifier>{c88d16dc-ea16-420f-b239-0412ce38c98e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Window">
+      <UniqueIdentifier>{1a720e09-65e4-40be-aa19-36f32b4e76f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Time">
+      <UniqueIdentifier>{055cda59-48c0-4d90-a278-2d27ad1b32b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Files">
+      <UniqueIdentifier>{fd023d1a-bda5-45f6-9bc6-4e9bc24288f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Input">
+      <UniqueIdentifier>{224e8ebc-9ece-4ea8-9912-6943366d1a9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Datatypes">
+      <UniqueIdentifier>{e230e4e9-1357-4e12-8693-ea1fb16161d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Debug">
+      <UniqueIdentifier>{6442b634-9e67-48e9-920e-241e27da15f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Scene\EventQueue">
+      <UniqueIdentifier>{3c0eea92-86e1-4f21-b754-c5f5c9f3c0e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Scene\Components">
+      <UniqueIdentifier>{2d22b9d9-2537-4db7-b413-4a090eb8cfbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Window\Textures">
+      <UniqueIdentifier>{4b244a5f-fb92-425f-8c53-6abae3b93462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Window\Fonts">
+      <UniqueIdentifier>{4e56614c-5965-485e-b958-9c4b4bcf0ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Window\Audio">
+      <UniqueIdentifier>{325bfea6-8b2b-494e-b040-23b43de4d517}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Random.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Engine\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw.h">
+      <Filter>Engine\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2i.h">
+      <Filter>Engine\Datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Colors.h">
+      <Filter>Engine\Datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Engine\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Engine\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="FileParameters.h">
+      <Filter>Engine\Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files.h">
+      <Filter>Engine\Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Engine\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Engine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Engine\Window\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts.h">
+      <Filter>Engine\Window\Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Engine\Window\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="EventQueue.h">
+      <Filter>Engine\Scene\EventQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Engine\Debug</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Random.cpp">
+      <Filter>Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Engine\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw.cpp">
+      <Filter>Engine\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Engine\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Engine\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="FileParameters.cpp">
+      <Filter>Engine\Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files.cpp">
+      <Filter>Engine\Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Engine\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Engine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Engine\Window\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="Fonts.cpp">
+      <Filter>Engine\Window\Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Engine\Window\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="EventQueue.cpp">
+      <Filter>Engine\Scene\EventQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Engine\Debug</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
