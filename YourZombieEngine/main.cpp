@@ -6,6 +6,12 @@
 #include "Time.h"
 #include "Colors.h"
 #include "Random.h"
+#include "Scene.h"
+
+#include "Transform.h"
+#include "Camera.h"
+#include "Script.h"
+#include "Sprite.h"
 
 int main(int argc, char** argv) {
 	Window::Init("MiniNinja", { 128, 96 });
@@ -13,7 +19,16 @@ int main(int argc, char** argv) {
 	Textures::Init();
 	Fonts::Init("Resources/Fonts/m5x7.ttf");
 	Audio::Init();
-	Window::SetRenderTarget(Textures::GetDefault());
+
+	Scene scene = Scene();
+	Entities::Index camera = scene.AddEntity();
+	scene.AddComponent<Transform>(camera);
+	scene.AddComponent<Camera>(camera);
+	scene.cameraEntity = camera;
+	Window::SetRenderTarget((SDL_Texture*)scene.GetComponent<Camera>(scene.cameraEntity));
+	Entities::Index sprite = scene.AddEntity();
+	scene.AddComponent<Transform>(sprite);
+	scene.AddComponent<Sprite>(sprite);
 	while (true) {
 		Window::HandleEvents();
 		Input::HandleEvents();

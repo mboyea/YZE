@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-TTF_Font* defaultFont = nullptr;
-inline std::unordered_map<std::string, TTF_Font*> fonts;
+static TTF_Font* defaultFont = nullptr;
+static std::unordered_map<std::string, TTF_Font*> fonts;
 
 bool SetDefault(TTF_Font* font) {
 	if (!font) {
@@ -17,7 +17,7 @@ bool SetDefault(TTF_Font* font) {
 	return true;
 }
 
-bool Fonts::Init(std::string filePathDefault, int sizeDefault) {
+bool Fonts::Init(std::string filePathDefault, unsigned int sizeDefault) {
 	TTF_Init();
 
 	return SetDefault(TTF_OpenFont(filePathDefault.c_str(), sizeDefault));
@@ -27,7 +27,7 @@ TTF_Font* Fonts::GetDefault() {
 	return defaultFont;
 }
 
-bool Fonts::Load(std::string filePath, int size) {
+bool Fonts::Load(std::string filePath, unsigned int size) {
 	if (!Files::DoesPathExist(filePath)) {
 		Debug::Log("File \"" + filePath + "\" does not exist.", WARNING);
 		Debug::Log("Font load failed.", FAULT);
@@ -42,7 +42,7 @@ bool Fonts::Load(std::string filePath, int size) {
 	return true;
 }
 
-void Fonts::LoadFromDirectory(std::string folderPath, int size) {
+void Fonts::LoadFromDirectory(std::string folderPath, unsigned int size) {
 	std::set<std::string> files =
 		Files::GetFilesWithExtension(
 			Files::GetFilesInDirectory(folderPath),
@@ -62,7 +62,7 @@ bool Fonts::Unload(std::string key) {
 	return true;
 }
 
-bool Fonts::Unload(std::string key, int size) {
+bool Fonts::Unload(std::string key, unsigned int size) {
 	return Unload(key + '_' + std::to_string(size));
 }
 
@@ -77,7 +77,7 @@ bool Fonts::IsFont(std::string key) {
 	return fonts.find(key) != fonts.end();
 }
 
-bool Fonts::IsFont(std::string key, int size) {
+bool Fonts::IsFont(std::string key, unsigned int size) {
 	return IsFont(key + '_' + std::to_string(size));
 }
 
@@ -88,7 +88,7 @@ TTF_Font* Fonts::GetFont(std::string key) {
 	return defaultFont;
 }
 
-TTF_Font* Fonts::GetFont(std::string key, int size) {
+TTF_Font* Fonts::GetFont(std::string key, unsigned int size) {
 	return GetFont(key + '_' + std::to_string(size));
 }
 
@@ -99,4 +99,22 @@ std::string Fonts::GetKey(TTF_Font* font) {
 		}
 	}
 	return "";
+}
+
+unsigned int Fonts::GetSizeFromKey(std::string key) {
+	for (auto it = key.crbegin(); it != key.crend(); it++) {
+		if (*it == '_') {
+			return std::stoi(key.substr(std::distance(it, key.crend())));
+		}
+	}
+	return DEFAULT_SIZE;
+}
+
+std::string Fonts::GetNameFromKey(std::string key) {
+	for (auto it = key.crbegin(); it != key.crend(); it++) {
+		if (*it == '_') {
+			return key.substr(0, std::distance(it, key.crend()) - 1);
+		}
+	}
+	return key;
 }

@@ -144,40 +144,60 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="EventQueue.h" />
-    <ClInclude Include="FileParameters.h" />
     <ClInclude Include="Files.h" />
     <ClInclude Include="Fonts.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Script.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ScriptSystem.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="System.h" />
+    <ClInclude Include="TestScript.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector2i.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Draw.cpp" />
     <ClCompile Include="EventQueue.cpp" />
-    <ClCompile Include="FileParameters.cpp" />
     <ClCompile Include="Files.cpp" />
     <ClCompile Include="Fonts.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Random.cpp" />
+    <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Script.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TestScript.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Time.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

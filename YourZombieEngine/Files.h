@@ -6,6 +6,10 @@
 #include <set>
 
 namespace Files {
+	const char TEXT_END = '\\';
+	std::string EncodeString(std::string str);
+	std::string DecodeString(std::string str);
+	std::string DecodeString(std::istream& is);
 	bool IsFileExtension(std::string filePath, std::string extension);
 	std::string GetFileExtension(std::string filePath);
 	std::string ForceFileExtension(std::string filePath, std::string extension);

@@ -1,6 +1,24 @@
 #include "Files.h"
 #include <filesystem>
 
+std::string Files::EncodeString(std::string str) {
+	str.erase(remove(str.begin(), str.end(), TEXT_END), str.end());
+	return str + TEXT_END;
+}
+
+std::string Files::DecodeString(std::istream& is) {
+	std::string str = "";
+	std::string input;
+	while (is >> input) {
+		if (input.back() == TEXT_END) {
+			break;
+		}
+		str += input + ' ';
+	}
+	str.pop_back();
+	return str;
+}
+
 bool Files::IsFileExtension(std::string filePath, std::string extension) {
 	if (extension[0] == '.') {
 		extension.erase(extension.begin() + 0);

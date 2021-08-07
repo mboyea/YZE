@@ -13,6 +13,7 @@ namespace Debug {
 	void CallFunction(std::string call, std::vector<std::string> args);
 	void AddFunction(std::function<bool(std::vector<std::string>)> func, std::string call);
 	void AddFunction(std::function<std::string(std::vector<std::string>)> func, std::string call);
+	unsigned int GetFunctionCount();
 	void LogHelp(int pageIndex = 1);
 	void SetHelpLogCount(int lineCount);
 	void InterpretConsoleCommand(std::string* text = &consoleInput);

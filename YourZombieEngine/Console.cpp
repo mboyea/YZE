@@ -26,21 +26,9 @@ static std::unordered_map<std::string, std::function<bool(std::vector<std::strin
 			}
 			return false;
 		}
-	},
-	{
-		"setdorendercolliders",
-		[](std::vector<std::string> args) {
-			return false;
-		}
-	},
-	{
-		"getdorendercolliders",
-		[](std::vector<std::string> args) {
-			return false;
-		}
 	}
 };
-static std::unordered_map<std::string, std::function<std::string(std::vector<std::string>)>> strFuncs;
+static std::unordered_map<std::string, std::function<std::string(std::vector<std::string>)>> strFuncs = {};
 
 bool Debug::IsFunction(std::string call) {
 	return boolFuncs.find(call) != boolFuncs.end() || strFuncs.find(call) != strFuncs.end();
@@ -58,50 +46,166 @@ void Debug::CallFunction(std::string call, std::vector<std::string> args) {
 	if (boolFuncs.find(call) != boolFuncs.end()) {
 		Debug::Log("> " + func, SUCCESS);
 		if (!boolFuncs[call](args)) {
-			Log("Function failed.", WARNING);
+			Debug::Log("Function failed.", WARNING);
 			return;
 		}
 		return;
 	}
 	// test for string function
 	if (strFuncs.find(call) != strFuncs.end()) {
-		Log("> " + func, SUCCESS);
+		Debug::Log("> " + func, SUCCESS);
 		std::string result = strFuncs[call](args);
 		if (result == "") {
-			Log("Function failed.", WARNING);
+			Debug::Log("Function failed.", WARNING);
 			return;
 		}
-		Log("= " + result);
+		Debug::Log("= " + result);
 		return;
 	}
 
-	Log("> " + func, WARNING);
-	Log("Unsupported function.");
+	Debug::Log("> " + func, WARNING);
+	Debug::Log("Unsupported function.");
 }
 
 void Debug::AddFunction(std::function<bool(std::vector<std::string>)> func, std::string call) {
+	std::transform(call.begin(), call.end(), call.begin(), std::tolower);
+	boolFuncs[call] = func;
 }
 
 void Debug::AddFunction(std::function<std::string(std::vector<std::string>)> func, std::string call) {
+	std::transform(call.begin(), call.end(), call.begin(), std::tolower);
+	strFuncs[call] = func;
+}
+
+unsigned int Debug::GetFunctionCount() {
+	return boolFuncs.size() + strFuncs.size();
 }
 
 void Debug::LogHelp(int pageIndex) {
+	int pageCount = (int)std::ceil((float)GetFunctionCount() / pageSize);
+	if (pageIndex < 1) {
+		pageIndex = 1;
+		Debug::Log("Help index out-of-bounds.", WARNING);
+	}
+	if (pageIndex > pageCount) {
+		pageIndex = pageCount;
+		Debug::Log("Help index out-of-bounds.", WARNING);
+	}
+
+	int i = 0;
+	for (auto boolFunc : boolFuncs) {
+		if (i < (pageIndex - 1) * pageSize) {
+			i++;
+			continue;
+		}
+		if (i >= pageIndex * pageSize) {
+			break;
+		}
+		Debug::Log(boolFunc.first + "(args)");
+		i++;
+	}
+	for (auto strFunc : strFuncs) {
+		if (i < (pageIndex - 1) * pageSize) {
+			i++;
+			continue;
+		}
+		if (i >= pageIndex * pageSize) {
+			break;
+		}
+		Debug::Log(strFunc.first + "(args)");
+		i++;
+	}
+	Debug::Log("- - - Help(" + std::to_string(pageIndex) + '/' + std::to_string(pageCount) + ") - - -");
 }
 
 void Debug::SetHelpLogCount(int lineCount) {
+	if (lineCount < 1) {
+		pageSize = 1;
+		return;
+	}
+	pageSize = lineCount;
+}
+
+std::vector<std::string> GetArgList(std::string& args) {
+	std::vector<std::string> argList;
+	std::string currentArg = "";
+
+	for (std::string::iterator it = args.begin(); it < args.end(); it++) {
+		// ignore whitespace
+		while (*it == ' ') {
+			it++;
+		}
+		// push back the arg if a comma is reached
+		if (*it == ',') {
+			argList.push_back(currentArg);
+			currentArg = "";
+			continue;
+		}
+		// add the char to the arg
+		currentArg += *it;
+	}
+	if (currentArg != "") {
+		// push back the last arg
+		argList.push_back(currentArg);
+	}
+
+	return argList;
 }
 
 void Debug::InterpretConsoleCommand(std::string* text) {
+	if (text->size() < 1) {
+		return;
+	}
+
+	if ((*text)[0] == '-') {
+		Log(text->substr(1, text->size() - 1));
+	}
+	else if ((*text)[text->size() - 1] == ')') {
+		for (std::string::iterator i = text->begin(); i < text->end(); i++) {
+			if (*i == '(') {
+				std::string name = std::string(text->begin(), i);
+				std::string args = std::string(i + 1, text->end() - 1);
+				name.erase(remove(name.begin(), name.end(), ' '), name.end());
+				std::transform(name.begin(), name.end(), name.begin(), std::tolower);
+				std::transform(args.begin(), args.end(), args.begin(), std::tolower);
+
+				CallFunction(name, GetArgList(args));
+				break;
+			}
+		}
+	}
+	else {
+		Log("Unsupported cmd \"" + *text + "\"", WARNING);
+	}
+
+	text->clear();
 }
 
 bool IsInteger(const std::string& str) {
-	return false;
+	if (str.empty() || (!std::isdigit(str[0]) && str[0] != '-' && str[0] != '+')) {
+		return false;
+	}
+	char* p;
+	std::strtol(str.c_str(), &p, 10);
+	return (*p == 0);
 }
 
 bool ToBool(const std::string& str) {
+	if (str[0] == 'T' || str[0] == 't') {
+		return true;
+	}
+	if (IsInteger(str)) {
+		return std::stoi(str);
+	}
 	return false;
 }
 
 bool ToString(const bool& boolean) {
-	return false;
+	switch (boolean) {
+	case true:
+		return "True";
+	case false:
+		return "False";
+	}
+	return "BoolToString Failed";
 }
