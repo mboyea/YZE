@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "Draw.h"
+#include "Textures.h"
 #include "Log.h"
 #include <vector>
 
@@ -64,6 +65,8 @@ void Window::HandleEvents() {
 				SetDrawTarget(renderTarget);
 			}
 			break;
+		case SDL_RENDER_TARGETS_RESET:
+			Textures::FixLostDefault();
 		default:
 			// ignore all other events
 			eventsIgnored.push_back(event);

@@ -30,8 +30,8 @@ struct Resource {
 	Resource(std::string name, ResourceType type)
 		: name(name), type(type) {}
 	bool operator<(const Resource& rhs);
-	friend std::ostream& operator<<(std::ostream& os, const Resource& rhs);
-	friend std::istream& operator>>(std::istream& is, Resource& rhs);
+	/*friend std::ostream& operator<<(std::ostream& os, const Resource& rhs);
+	friend std::istream& operator>>(std::istream& is, Resource& rhs);*/
 	std::string TypeToString();
 	std::string GetFilePath();
 };

@@ -20,6 +20,19 @@ bool SetDefault(SDL_Texture* texture) {
 	return false;
 }
 
+bool GenerateDefaultTexture() {
+	const Vector2i TEXTURE_DIM = { 2, 2 };
+	SDL_Texture* texture = SDL_CreateTexture(Window::renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, TEXTURE_DIM.x, TEXTURE_DIM.y);
+	Window::SetDrawTarget(texture);
+	Window::SetDrawColor(Colors::BLACK);
+	Window::DrawFilledRect({ 0, 0, TEXTURE_DIM.x, TEXTURE_DIM.y });
+	Window::SetDrawColor(Colors::MAGENTA);
+	Window::DrawFilledRect({ 0, 0, TEXTURE_DIM.x / 2, TEXTURE_DIM.y / 2 });
+	Window::DrawFilledRect({ TEXTURE_DIM.x / 2, TEXTURE_DIM.y / 2, TEXTURE_DIM.x / 2, TEXTURE_DIM.y / 2 });
+	Window::SetDrawTarget(Window::GetRenderTarget());
+	return SetDefault(texture);
+}
+
 void Textures::Init() {
 	// enable .png loading
 	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
@@ -27,9 +40,15 @@ void Textures::Init() {
 	// turn off texture blurring
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-	// generate default texture
+	GenerateDefaultTexture();
+}
+
+SDL_Texture* Textures::GetDefault() {
+	return defaultTexture;
+}
+
+void Textures::FixLostDefault() {
 	const Vector2i TEXTURE_DIM = { 2, 2 };
-	SDL_Texture* defaultTexture = SDL_CreateTexture(Window::renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, TEXTURE_DIM.x, TEXTURE_DIM.y);
 	Window::SetDrawTarget(defaultTexture);
 	Window::SetDrawColor(Colors::BLACK);
 	Window::DrawFilledRect({ 0, 0, TEXTURE_DIM.x, TEXTURE_DIM.y });
@@ -37,11 +56,6 @@ void Textures::Init() {
 	Window::DrawFilledRect({ 0, 0, TEXTURE_DIM.x / 2, TEXTURE_DIM.y / 2 });
 	Window::DrawFilledRect({ TEXTURE_DIM.x / 2, TEXTURE_DIM.y / 2, TEXTURE_DIM.x / 2, TEXTURE_DIM.y / 2 });
 	Window::SetDrawTarget(Window::GetRenderTarget());
-	SetDefault(defaultTexture);
-}
-
-SDL_Texture* Textures::GetDefault() {
-	return defaultTexture;
 }
 
 bool Textures::Load(std::string filePath) {
@@ -114,4 +128,12 @@ std::string Textures::GetKey(SDL_Texture* texture) {
 		}
 	}
 	return "";
+}
+
+Vector2i Textures::GetDim(SDL_Texture* texture) {
+	Vector2i dimensions = { 16, 16 };
+	if (SDL_QueryTexture(texture, NULL, NULL, &dimensions.x, &dimensions.y) < 0) {
+		Debug::Log("Failed to query texture: " + (std::string)SDL_GetError(), WARNING);
+	}
+	return dimensions;
 }

@@ -8,12 +8,17 @@
 
 class Sprite : public Component {
 	INIT_COMPONENT();
+	// TODO: SDL_Rect* clipRect;
+public:
 	SDL_Texture* texture;
 	Vector2i dim;
-public:
-	Vector2i GetDim();
-	SDL_Texture* GetTexture();
-	void SetTexture(SDL_Texture* texture);
+	Sprite();
+	Sprite(SDL_Texture* texture);
+	Sprite(SDL_Texture* texture, Vector2i dim);
+	Vector2i GetTextureDim();
+	virtual std::set<Resource>& GetRequiredResources(std::set<Resource>& resourcesOut) override;
+	virtual std::ostream& Serialize(std::ostream& os) override;
+	virtual std::istream& Deserialize(std::istream& is) override;
 };
 
 #endif // !SPRITE_H

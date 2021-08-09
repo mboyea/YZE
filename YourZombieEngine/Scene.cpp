@@ -1,4 +1,8 @@
 #include "Scene.h"
+#include "Window.h"
+#include "Draw.h"
+
+#include "SpriteSystem.h"
 
 static Scene* activeScene = nullptr;
 
@@ -6,12 +10,12 @@ Scene::Scene()
 	: entities(new std::vector<Components::Index>[Components::GetTypeCount()]),
 	components(new std::vector<Component*>[Components::GetTypeCount()]),
 	oldComponentIndexes(new std::queue<Components::Index>[Components::GetTypeCount()]),
-	cameraEntity(-1) {}
+	activeCamera(nullptr) {}
 
 Scene::~Scene() {
-	for (size_t c = 0; c < Components::GetTypeCount(); c++) {
-		for (size_t i = 0; i < components[c].size(); i++) {
-			delete components[c][i];
+	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
+		for (size_t i = 0; i < components[type].size(); i++) {
+			delete components[type][i];
 		}
 	}
 	delete[] entities;
@@ -25,13 +29,59 @@ void Scene::Update() {
 	activeScene = nullptr;
 }
 
-void Scene::DoPhysics() {}
+void Scene::DoCollisions() {
+	activeScene = this;
 
-void Scene::LateUpdate() {}
+	activeScene = nullptr;
+}
+
+void Scene::LateUpdate() {
+	activeScene = this;
+
+	activeScene = nullptr;
+}
 
 void Scene::Render() {
 	activeScene = this;
-
+	// TODO: identify common patterns of this implementation and condense it to smaller & repeated functions
+	// TODO: export the cameras and sprites vectors to their respective Systems namespaces.  Edit them on the creation and destruction of cameras and sprites.  Create a way to do the same for every component.
+	std::vector<Entities::Index> cameras;
+	{ // Get scene cameras
+		Entities::Index entity = 0;
+		for (Components::Index index : entities[Camera::GetTypeID()]) {
+			if (index >= 0) {
+				if (entities[Transform::GetTypeID()][entity] >= 0) {
+					cameras.push_back(entity);
+				}
+			}
+			entity++;
+		}
+	}
+	std::vector<Entities::Index> sprites;
+	{ // Get scene sprites
+		Entities::Index entity = 0;
+		for (Components::Index index : entities[Sprite::GetTypeID()]) {
+			if (index >= 0) {
+				if (entities[Transform::GetTypeID()][entity] >= 0) {
+					sprites.push_back(entity);
+				}
+			}
+			entity++;
+		}
+	}
+	// Render to each camera
+	for (Entities::Index camera : cameras) {
+		Window::SetDrawTarget(GetComponent<Camera>(camera)->GetTexture());
+		// render each sprite
+		for (Entities::Index sprite : sprites) {
+			Systems::Sprites::Render(
+				GetComponent<Sprite>(sprite),
+				GetComponent<Transform>(sprite),
+				GetComponent<Transform>(camera)
+			);
+		}
+		Window::SetDrawTarget(Window::GetRenderTarget());
+	}
 	activeScene = nullptr;
 }
 
@@ -39,12 +89,31 @@ Scene* Scene::GetActiveScene() {
 	return activeScene;
 }
 
+std::set<Resource>& Scene::GetRequiredResources(std::set<Resource>& resourcesOut) {
+	// TODO: determine required resources
+	return resourcesOut;
+}
+
+std::ostream& Scene::Serialize(std::ostream& os) {
+	// TODO: serialize scene
+	return os;
+}
+
+std::istream& Scene::Deserialize(std::istream& is) {
+	// TODO: deserialize scene
+	return is;
+}
+
+bool Scene::IsEntity(Entities::Index entity) {
+	return entity >= 0 && entity < (Entities::Index)entities[0].size();
+}
+
 Entities::Index Scene::AddEntity() {
 	Entities::Index id;
 	if (oldEntityIndexes.empty()) {
 		id = entities[0].size();
-		for (size_t i = 0; i < Components::GetTypeCount(); i++) {
-			entities[i].resize(id + 1, Components::NO_COMPONENT);
+		for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
+			entities[type].push_back(Components::NO_COMPONENT);
 		}
 	} else {
 		id = oldEntityIndexes.front();
@@ -54,18 +123,18 @@ Entities::Index Scene::AddEntity() {
 }
 
 void Scene::DeleteEntity(Entities::Index entity) {
-	if (entity < 0 || entity > (Entities::Index)entities[0].size()) {
+	if (!IsEntity(entity)) {
 		return;
 	}
-	for (size_t i = 0; i < Components::GetTypeCount(); i++) {
-		if (entities[i][entity] > 1) {
-			DeleteComponent(i, entity);
+	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
+		if (entities[type][entity] > 1) {
+			DeleteComponent(type, entity);
 		}
 	}
 }
 
-Component* Scene::AddComponent(Components::ID type, Entities::Index entity) {
-	if (entity < 0 || entity > (Entities::Index)entities[type].size()) {
+Component* Scene::AddComponent(Components::TypeID type, Entities::Index entity) {
+	if (!IsEntity(entity)) {
 		return nullptr;
 	}
 	// if component already exists, return it
@@ -82,32 +151,19 @@ Component* Scene::AddComponent(Components::ID type, Entities::Index entity) {
 		oldComponentIndexes[type].pop();
 	}
 	entities[type][entity] = index;
-	components[type][index] = Components::IDToType(entity);
+	components[type][index] = Components::IDToType(type);
 	return components[type][index];
 }
 
-Component* Scene::GetComponent(Components::ID type, Entities::Index entity) {
-	if (entity < 0 || entity > (Entities::Index)entities[type].size()) {
-		return nullptr;
-	}
-	Components::Index index = entities[type][entity];
-	if (index >= 0) {
-		return components[type][index];
-	}
-	return nullptr;
+Component* Scene::GetComponent(Components::TypeID type, Entities::Index entity) {
+	return components[type][entities[type][entity]];
 }
 
-bool Scene::HasComponent(Components::ID type, Entities::Index entity) {
-	if (entity < 0 || entity > (Entities::Index)entities[type].size()) {
-		return false;
-	}
+bool Scene::HasComponent(Components::TypeID type, Entities::Index entity) {
 	return entities[type][entity] >= 0;
 }
 
-void Scene::DeleteComponent(Components::ID type, Entities::Index entity) {
-	if (entity < 0 || entity > (Entities::Index)entities[type].size()) {
-		return;
-	}
+void Scene::DeleteComponent(Components::TypeID type, Entities::Index entity) {
 	Components::Index index = entities[type][entity];
 	if (index < 0 || index >= (Components::Index)components[type].size()) {
 		return;

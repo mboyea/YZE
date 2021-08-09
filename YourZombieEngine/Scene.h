@@ -21,9 +21,15 @@ namespace Components {
 class Scene {
 private:
 	EventQueue events;
+	// std::set<std::string> entityNames;
 	std::vector<Components::Index>* entities;
 	std::vector<Component*>* components;
 	/* * * * * * * * * * * * * * * * *\
+	*          entityNames
+	*   |  0  |  1  |  2  |  3  | 
+	*---|-----|-----|-----|-----|-
+	*   |name0|name1|name2|name3| 
+	*---|-----|-----|-----|-----|-
 	*              entities
 	* component| 0 | 1 | 2 | 3 | 
 	* types ---|---|---|---|---|-
@@ -52,50 +58,34 @@ private:
 	// queue of deleted component locations for reuse
 	std::queue<Components::Index>* oldComponentIndexes;
 public:
-	Entities::Index cameraEntity;
+	Camera* activeCamera;
 	Scene();
 	~Scene();
 	void Update();
-	void DoPhysics();
+	void DoCollisions();
 	void LateUpdate();
 	void Render();
 	static Scene* GetActiveScene();
+	virtual std::set<Resource>& GetRequiredResources(std::set<Resource>& resourcesOut);
+	virtual std::ostream& Serialize(std::ostream& os);
+	virtual std::istream& Deserialize(std::istream& is);
 
+	bool IsEntity(Entities::Index entity);
 	Entities::Index AddEntity();
 	void DeleteEntity(Entities::Index entity);
-	Component* AddComponent(Components::ID type, Entities::Index entity);
+	Component* AddComponent(Components::TypeID type, Entities::Index entity);
 	template<typename T> T* AddComponent(Entities::Index entity) {
-		Components::ID type = Components::TypeToID<T>();
-		if (entity < 0 || entity > (Entities::Index)entities[type].size()) {
-			return nullptr;
-		}
-		// if component already exists, return it
-		Components::Index index = entities[type][entity];
-		if (index >= 0) {
-			return static_cast<T*>(components[type][index]);
-		}
-		// generate new component
-		if (oldComponentIndexes[type].empty()) {
-			index = (Components::Index)components[type].size();
-			components[type].resize(index + 1, nullptr);
-		}
-		else {
-			index = oldComponentIndexes[type].front();
-			oldComponentIndexes[type].pop();
-		}
-		entities[type][entity] = index;
-		components[type][index] = new T();
-		return static_cast<T*>(components[type][index]);
+		return static_cast<T*>(AddComponent(Components::TypeToID<T>(), entity));
 	}
-	Component* GetComponent(Components::ID type, Entities::Index entity);
+	Component* GetComponent(Components::TypeID type, Entities::Index entity);
 	template<typename T> T* GetComponent(Entities::Index entity) {
 		return static_cast<T*>(GetComponent(T::GetTypeID(), entity));
 	}
-	bool HasComponent(Components::ID type, Entities::Index entity);
+	bool HasComponent(Components::TypeID type, Entities::Index entity);
 	template<typename T> bool HasComponent(Entities::Index entity) {
 		return HasComponent(T::GetTypeID(), entity);
 	}
-	void DeleteComponent(Components::ID type, Entities::Index entity);
+	void DeleteComponent(Components::TypeID type, Entities::Index entity);
 	template<typename T> void DeleteComponent(Entities::Index entity) {
 		DeleteComponent(T::GetTypeID(), entity);
 	}

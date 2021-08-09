@@ -69,12 +69,12 @@ bool Window::DrawCircle(const Vector2i& pos, const int& radius) {
 	return false;
 }
 
-bool Window::DrawTexture(SDL_Texture* texture, const SDL_Rect* rect, const SDL_Rect* textureRect) {
-	return SDL_RenderCopy(renderer, texture, textureRect, rect) < 0;
+bool Window::DrawTexture(SDL_Texture* texture, const SDL_Rect* rect, const SDL_Rect* clipRect) {
+	return SDL_RenderCopy(renderer, texture, clipRect, rect) < 0;
 }
 
-bool Window::DrawTexture(SDL_Texture* texture, const SDL_RendererFlip& flip, const SDL_Rect* rect, const SDL_Rect* textureRect, const Vector2i* pivot, const double& angle) {
-	return SDL_RenderCopyEx(renderer, texture, textureRect, rect, angle, (SDL_Point*)pivot, flip) < 0;
+bool Window::DrawTexture(SDL_Texture* texture, const SDL_RendererFlip& flip, const SDL_Rect* rect, const SDL_Rect* cilpRect, const Vector2i* pivot, const double& angle) {
+	return SDL_RenderCopyEx(renderer, texture, cilpRect, rect, angle, (SDL_Point*)pivot, flip) < 0;
 }
 
 bool Window::DrawText(std::string text, Vector2i pos, TTF_Font* font, SDL_Color textColor) {

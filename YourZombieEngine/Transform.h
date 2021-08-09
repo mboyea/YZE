@@ -9,6 +9,9 @@ class Transform : public Component {
 	INIT_COMPONENT();
 public:
 	Vector2i pos;
+	Transform();
+	virtual std::ostream& Serialize(std::ostream& os) override;
+	virtual std::istream& Deserialize(std::istream& is) override;
 };
 
 #endif // !TRANSFORM_H

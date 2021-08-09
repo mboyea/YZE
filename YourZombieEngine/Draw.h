@@ -41,10 +41,10 @@ namespace Window {
 	bool DrawCircle(const Vector2i& pos, const int& radius);
 	// draw a texture on the current render target
 	// return true if it fails
-	bool DrawTexture(SDL_Texture* texture, const SDL_Rect* rect = NULL, const SDL_Rect* textureRect = NULL);
+	bool DrawTexture(SDL_Texture* texture, const SDL_Rect* rect = NULL, const SDL_Rect* clipRect = NULL);
 	// draw a texture on the current render target
 	// return true if it fails
-	bool DrawTexture(SDL_Texture* texture, const SDL_RendererFlip& flip, const SDL_Rect* rect = NULL, const SDL_Rect* textureRect = NULL, const Vector2i* pivot = NULL, const double& angle = 0);
+	bool DrawTexture(SDL_Texture* texture, const SDL_RendererFlip& flip, const SDL_Rect* rect = NULL, const SDL_Rect* clipRect = NULL, const Vector2i* pivot = NULL, const double& angle = 0);
 	// draw text with a transparent background on the current render target
 	// return true if it fails
 	bool DrawText(std::string text, Vector2i pos, TTF_Font* font, SDL_Color textColor = Colors::WHITE);

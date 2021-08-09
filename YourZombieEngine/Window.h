@@ -10,7 +10,7 @@ namespace Window {
 	inline SDL_Window* window = nullptr;
 	inline SDL_Renderer* renderer = nullptr;
 
-	void Init(std::string title = "Game", Vector2i dim = { 128, 96 });
+	void Init(std::string title = "Game", Vector2i dim = { 320, 240 });
 	void HandleEvents();
 	void PresentWindow();
 

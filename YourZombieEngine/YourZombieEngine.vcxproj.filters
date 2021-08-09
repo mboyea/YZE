@@ -37,7 +37,7 @@
     <Filter Include="Engine\Scene\Systems">
       <UniqueIdentifier>{a35ac6fd-c480-4cb4-a248-bbba9f4660f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Window\Resources">
+    <Filter Include="Engine\Scene\Resources">
       <UniqueIdentifier>{a7096e49-f5c6-40b2-bbc9-3f526b993381}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -105,23 +105,23 @@
     <ClInclude Include="TestScript.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="System.h">
-      <Filter>Engine\Scene\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>Engine\Scene\Components</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>Engine\Window\Resources</Filter>
+      <Filter>Engine\Scene\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Fonts.h">
-      <Filter>Engine\Window\Resources</Filter>
+      <Filter>Engine\Scene\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Audio.h">
-      <Filter>Engine\Window\Resources</Filter>
+      <Filter>Engine\Scene\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Textures.h">
-      <Filter>Engine\Window\Resources</Filter>
+      <Filter>Engine\Scene\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteSystem.h">
+      <Filter>Engine\Scene\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -174,19 +174,22 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Resource.cpp">
-      <Filter>Engine\Window\Resources</Filter>
+      <Filter>Engine\Scene\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Fonts.cpp">
-      <Filter>Engine\Window\Resources</Filter>
+      <Filter>Engine\Scene\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Audio.cpp">
-      <Filter>Engine\Window\Resources</Filter>
+      <Filter>Engine\Scene\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Textures.cpp">
-      <Filter>Engine\Window\Resources</Filter>
+      <Filter>Engine\Scene\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>Engine\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSystem.cpp">
+      <Filter>Engine\Scene\Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

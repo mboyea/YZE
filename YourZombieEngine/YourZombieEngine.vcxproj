@@ -166,7 +166,7 @@
     </ClInclude>
     <ClInclude Include="ScriptSystem.h" />
     <ClInclude Include="Sprite.h" />
-    <ClInclude Include="System.h" />
+    <ClInclude Include="SpriteSystem.h" />
     <ClInclude Include="TestScript.h">
       <SubType>
       </SubType>
@@ -194,6 +194,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="TestScript.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Time.cpp" />

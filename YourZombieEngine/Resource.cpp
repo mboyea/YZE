@@ -57,7 +57,7 @@ std::string Resource::GetFilePath() {
 		return Files::ForceFilePath(name, "ERROR", "resourceerror");
 	}
 }
-
+/*
 std::ostream& operator<<(std::ostream& os, const Resource& rhs) {
 	return os << Files::EncodeString(rhs.name);
 }
@@ -66,7 +66,7 @@ std::istream& operator>>(std::istream& is, Resource& rhs) {
 	rhs.name = Files::DecodeString(is);
 	return is;
 }
-
+*/
 bool LoadResource(Resource resource) {
 	std::string filePath = resource.GetFilePath();
 	switch (resource.type) {
@@ -99,5 +99,9 @@ bool LoadResource(Resource resource) {
 }
 
 bool LoadResources(std::set<Resource> resources) {
-	
+	bool didSucceed = true;
+	for (Resource resource : resources) {
+		didSucceed = didSucceed && LoadResource(resource);
+	}
+	return didSucceed;
 }

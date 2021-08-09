@@ -1,13 +1,31 @@
 #include "Sprite.h"
 REGISTER_COMPONENT(Sprite);
+#include "Textures.h"
 
-Vector2i Sprite::GetDim() {
-	return Vector2i();
+Sprite::Sprite()
+	: texture(Textures::GetDefault()), dim({ 16, 16 }) {}
+
+Sprite::Sprite(SDL_Texture* texture)
+	: texture(texture), dim(Textures::GetDim(texture)) {}
+
+Sprite::Sprite(SDL_Texture* texture, Vector2i dim)
+	: texture(texture), dim(dim) {}
+
+Vector2i Sprite::GetTextureDim() {
+	return Textures::GetDim(texture);
 }
 
-SDL_Texture* Sprite::GetTexture() {
-	return nullptr;
+std::set<Resource>& Sprite::GetRequiredResources(std::set<Resource>& resourcesOut){
+	// TODO: logic
+	return resourcesOut;
 }
 
-void Sprite::SetTexture(SDL_Texture* texture) {
+std::ostream& Sprite::Serialize(std::ostream& os) {
+	// TODO: logic
+	return os;
+}
+
+std::istream& Sprite::Deserialize(std::istream& is) {
+	// TODO: logic
+	return is;
 }

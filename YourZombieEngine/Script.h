@@ -15,9 +15,12 @@ class Script : public Component {
 private:
 	static Scripts::ID scriptID;
 public:
+
 	virtual Scripts::ID GetScriptID() {
 		return Scripts::INVALID_TYPE;
 	}
+	virtual std::ostream& Serialize(std::ostream& os) override;
+	virtual std::istream& Deserialize(std::istream& is) override;
 };
 
 namespace Scripts {
