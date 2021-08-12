@@ -2,7 +2,6 @@
 #define SPRITE_SYSTEM_H
 #pragma once
 
-#include "Scene.h"
 #include "Sprite.h"
 #include "Transform.h"
 

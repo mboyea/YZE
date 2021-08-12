@@ -1,17 +1,17 @@
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
+#ifndef COLLIDER_LIST_H
+#define COLLIDER_LIST_H
 #pragma once
 
 #include "Component.h"
-#include "Vector2i.h"
+#include "Collider.h"
+#include <vector>
 
-class Transform : public Component {
+class ColliderList : public Component {
 	INIT_COMPONENT;
 public:
-	Vector2i pos;
-	Transform();
+	std::vector<Collider*> colliders;
 	virtual std::ostream& Serialize(std::ostream& os) override;
 	virtual std::istream& Deserialize(std::istream& is) override;
 };
 
-#endif // !TRANSFORM_H
+#endif // !COLLIDER_LIST_H

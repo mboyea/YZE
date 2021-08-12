@@ -1,17 +1,17 @@
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
+#ifndef SCRIPT_LIST_H
+#define SCRIPT_LIST_H
 #pragma once
 
 #include "Component.h"
-#include "Vector2i.h"
+#include "Script.h"
+#include <vector>
 
-class Transform : public Component {
+class ScriptList : public Component {
 	INIT_COMPONENT;
 public:
-	Vector2i pos;
-	Transform();
+	std::vector<Script*> scripts;
 	virtual std::ostream& Serialize(std::ostream& os) override;
 	virtual std::istream& Deserialize(std::istream& is) override;
 };
 
-#endif // !TRANSFORM_H
+#endif // !SCRIPT_LIST_H

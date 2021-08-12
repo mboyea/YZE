@@ -9,7 +9,7 @@ void Systems::Sprites::Render(Sprite* sprite, Transform* spriteTransform) {
 		sprite->dim.x,
 		sprite->dim.y
 	};
-	Window::DrawTexture(sprite->texture, &rect);
+	Window::DrawTexture(sprite->texture, &rect, sprite->GetClip());
 }
 
 void Systems::Sprites::Render(Sprite* sprite, Transform* spriteTransform, Transform* cameraTransform) {
@@ -19,5 +19,5 @@ void Systems::Sprites::Render(Sprite* sprite, Transform* spriteTransform, Transf
 		sprite->dim.x,
 		sprite->dim.y
 	};
-	Window::DrawTexture(sprite->texture, &rect);
+	Window::DrawTexture(sprite->texture, &rect, sprite->GetClip());
 }

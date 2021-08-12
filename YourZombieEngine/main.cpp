@@ -13,6 +13,8 @@
 #include "Camera.h"
 #include "Script.h"
 #include "Sprite.h"
+#include "ScriptList.h"
+#include "TestScript.h"
 
 int main(int argc, char** argv) {
 	Window::Init("MiniNinja", { 512, 384 });
@@ -22,6 +24,7 @@ int main(int argc, char** argv) {
 	Audio::Init();
 
 	Scene scene = Scene();
+
 	Entities::Index entityCamera = scene.AddEntity();
 	scene.AddComponent<Transform>(entityCamera);
 	scene.activeCamera = scene.AddComponent<Camera>(entityCamera);
@@ -31,6 +34,9 @@ int main(int argc, char** argv) {
 	Entities::Index entitySprite = scene.AddEntity();
 	scene.AddComponent<Transform>(entitySprite);
 	Sprite* sprite = scene.AddComponent<Sprite>(entitySprite);
+	ScriptList* scriptList = scene.AddComponent<ScriptList>(entitySprite);
+	TestScript* testScript = Scripts::NewScript<TestScript>();
+	scriptList->scripts.push_back(testScript);
 
 	while (true) {
 		Window::HandleEvents();

@@ -7,7 +7,7 @@
 #include "Vector2i.h"
 
 class Camera : public Component {
-	INIT_COMPONENT();
+	INIT_COMPONENT;
 	SDL_Texture* renderTexture;
 public:
 	Camera(Vector2i dim = { 320, 240 });

@@ -3,8 +3,8 @@
 #pragma once
 
 #include <vector>
-#include <iostream>
 #include <string>
+#include <iostream>
 #include "Resource.h"
 
 namespace Components {
@@ -34,7 +34,7 @@ public:
 };
 
 namespace Components {
-	inline std::vector<Component* (*)()> typeArray;
+	inline std::vector<Component*(*)()> typeArray;
 	template<typename T> class Register {
 	public:
 		const Components::TypeID typeID;
@@ -53,25 +53,25 @@ namespace Components {
 	}
 }
 
-#define INIT_COMPONENT() public:							\
+#define INIT_COMPONENT public:	\
 virtual Components::TypeID GetVirtualTypeID() override {	\
-return typeID;												\
-}															\
-static constexpr Components::TypeID GetTypeID() {			\
-return typeID;												\
-}															\
-virtual std::string GetVirtualName() override {				\
-return name;												\
-}															\
-static std::string GetName() {								\
-return name;												\
-}															\
-private:													\
-static const Components::TypeID typeID;						\
+return typeID;	\
+}	\
+static constexpr Components::TypeID GetTypeID() {	\
+return typeID;	\
+}	\
+virtual std::string GetVirtualName() override {	\
+return name;	\
+}	\
+static std::string GetName() {	\
+return name;	\
+}	\
+private:	\
+static const Components::TypeID typeID;	\
 static const std::string name
 
 #define REGISTER_COMPONENT(c) static Components::Register<##c> Registered_##c;	\
-const Components::TypeID c::typeID = Registered_##c.typeID;						\
+const Components::TypeID c::typeID = Registered_##c.typeID;	\
 const std::string c::name = #c
 
 #endif // !COMPONENT_H

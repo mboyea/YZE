@@ -5,13 +5,10 @@
 #include "EventQueue.h"
 #include "Component.h"
 #include "Camera.h"
+#include "Entities.h"
 #include <SDL.h>
 #include <vector>
 #include <queue>
-
-namespace Entities {
-	typedef int Index;
-}
 
 namespace Components {
 	typedef short Index;
@@ -21,7 +18,7 @@ namespace Components {
 class Scene {
 private:
 	EventQueue events;
-	// std::set<std::string> entityNames;
+	std::vector<std::string> entityNames;
 	std::vector<Components::Index>* entities;
 	std::vector<Component*>* components;
 	/* * * * * * * * * * * * * * * * *\

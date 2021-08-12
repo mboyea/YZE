@@ -93,7 +93,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -144,12 +144,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CollisionSystem.h" />
+    <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="ColliderList.h" />
+    <ClInclude Include="ColliderSystem.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="Draw.h" />
+    <ClInclude Include="Entities.h" />
     <ClInclude Include="EventQueue.h" />
     <ClInclude Include="Files.h" />
     <ClInclude Include="Fonts.h" />
@@ -157,10 +163,10 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Random.h" />
-    <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="Script.h">
+    <ClInclude Include="Script.h" />
+    <ClInclude Include="ScriptList.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -179,7 +185,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="ColliderList.cpp" />
+    <ClCompile Include="ColliderSystem.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Draw.cpp" />
@@ -193,6 +204,8 @@
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Script.cpp" />
+    <ClCompile Include="ScriptList.cpp" />
+    <ClCompile Include="ScriptSystem.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="TestScript.cpp" />

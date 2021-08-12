@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Draw.h"
 
+#include "ScriptSystem.h"
 #include "SpriteSystem.h"
 
 static Scene* activeScene = nullptr;
@@ -25,13 +26,37 @@ Scene::~Scene() {
 void Scene::Update() {
 	activeScene = this;
 	events.HandleEvents();
-
+	std::vector<Entities::Index> scriptLists;
+	{ // Get script lists
+		Entities::Index entity = 0;
+		for (Components::Index index : entities[ScriptList::GetTypeID()]) {
+			if (index >= 0) {
+				scriptLists.push_back(entity);
+			}
+			entity++;
+		}
+	}
+	for (Entities::Index scriptList : scriptLists) {
+		Systems::Scripts::Update(
+			GetComponent<ScriptList>(scriptList),
+			scriptList
+		);
+	}
 	activeScene = nullptr;
 }
 
 void Scene::DoCollisions() {
 	activeScene = this;
-
+	std::vector<Entities::Index> scriptLists;
+	{ // Get script lists
+		Entities::Index entity = 0;
+		for (Components::Index index : entities[ScriptList::GetTypeID()]) {
+			if (index >= 0) {
+				scriptLists.push_back(entity);
+			}
+			entity++;
+		}
+	}
 	activeScene = nullptr;
 }
 

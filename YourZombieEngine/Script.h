@@ -2,37 +2,83 @@
 #define SCRIPT_H
 #pragma once
 
-#include "Component.h"
+#include "Entities.h"
 #include <vector>
+#include <string>
+#include "Collision.h"
 
 namespace Scripts {
-	typedef int ID;
-	const ID INVALID_TYPE = -1;
+	typedef int TypeID;
+	const TypeID INVALID_TYPE = -1;
 }
 
-class Script : public Component {
-	INIT_COMPONENT();
+class Script {
 private:
-	static Scripts::ID scriptID;
+	static const std::string name;
 public:
-
-	virtual Scripts::ID GetScriptID() {
+	virtual Scripts::TypeID GetVirtualTypeID() {
 		return Scripts::INVALID_TYPE;
 	}
-	virtual std::ostream& Serialize(std::ostream& os) override;
-	virtual std::istream& Deserialize(std::istream& is) override;
+	static constexpr Scripts::TypeID GetTypeID() {
+		return Scripts::INVALID_TYPE;
+	}
+	virtual std::string GetVirtualName() {
+		return name;
+	}
+	static std::string GetName() {
+		return name;
+	}
+	Script() {}
+	virtual void Start(Entities::Index entity) {}
+	virtual void Update(Entities::Index entity) {}
+	virtual void OnCollision(Collision* collision, Entities::Index entity) {}
+	virtual void LateUpdate(Entities::Index entity) {}
+	virtual void Render(Entities::Index entity) {}
+	~Script() {}
 };
 
 namespace Scripts {
-	// TOOD: mimic Component design to store script functions
-	// possibly use macros and #if statements to check if a function exists and then add it to a void* list specific
-	// to that script ID.  this list may make its indexes reflective of specific script types.  If so, I will have to
-	// find some way to compress these lists.  Maybe make indexes relflective of script ids and sub-indexes reflective
-	// of script types.  handle the calling of these scripts in ScriptSystem.h
+	inline std::vector<Script*(*)()> typeArray;
+	template<typename T> class Register {
+	public:
+		const Scripts::TypeID typeID;
+		Register() : typeID(typeArray.size()) {
+			typeArray.push_back([]()->Script* { return new T(); });
+		}
+	};
+	inline Script* NewScript(TypeID id) {
+		return typeArray[id]();
+	}
+	template<typename T> T* NewScript() {
+		return static_cast<T*>(NewScript(T::GetTypeID()));
+	}
+	template<typename T> TypeID TypeToID() {
+		return T::GetTypeID();
+	}
+	inline TypeID GetTypeCount() {
+		return typeArray.size();
+	}
 }
 
-#define INIT_SCRIPT() 
+#define INIT_SCRIPT public:	\
+virtual Scripts::TypeID GetVirtualTypeID() override {	\
+return typeID;	\
+}	\
+static constexpr Scripts::TypeID GetTypeID() {	\
+return typeID;	\
+}	\
+virtual std::string GetVirtualName() override {	\
+return name;	\
+}	\
+static std::string GetName() {	\
+return name;	\
+}	\
+private:	\
+static const Scripts::TypeID typeID;	\
+static const std::string name
 
-#define REGISTER_SCRIPT(c) 
+#define REGISTER_SCRIPT(c) static Scripts::Register<##c> Registered_##c;	\
+const Scripts::TypeID c::typeID = Registered_##c.typeID;	\
+const std::string c::name = #c
 
 #endif // !SCRIPT_H
