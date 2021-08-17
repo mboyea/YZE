@@ -3,11 +3,14 @@
 #pragma once
 
 #include <vector>
+#include "Vector4i.h"
 #include "Vector2i.h"
+#include "Collision.h"
+#include "Transform.h"
 
 namespace Colliders {
 	typedef int TypeID;
-	const TypeID INVALID_TYPE = -1;
+	inline const TypeID INVALID_TYPE = -1;
 }
 
 class Collider {
@@ -26,10 +29,15 @@ public:
 	}
 private:
 	static const char str[];
-private:
+protected:
+	// axis-aligned bounding box
+	Vector4i aabb;
+	virtual Collision DoNarrowCollision(Transform* transform, Collider* target, Transform* targetTransform);
+	bool IsBroadColliding(Transform* transform, Collider* target, Transform* targetTransform);
 public:
-	Collider();
-	~Collider();
+	bool doSolveCollision;
+	Collision DoCollision(Transform* transform, Collider* target, Transform* targetTransform);
+	Vector4i GetAABB();
 };
 
 namespace Colliders {
@@ -45,7 +53,7 @@ namespace Colliders {
 		return typeArray[id]();
 	}
 	template<typename T> inline T* New() {
-		return static_cast<T*>(NewCollider(T::GetColliderID()));
+		return static_cast<T*>(New(T::GetColliderID()));
 	}
 	template<typename T> inline TypeID GetTypeID() {
 		return T::GetColliderID();

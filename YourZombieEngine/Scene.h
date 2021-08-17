@@ -18,14 +18,14 @@ namespace Components {
 class Scene {
 private:
 	EventQueue events;
-	std::vector<std::string> entityNames;
+	// std::vector<std::string> entityNames;
 	std::vector<Components::Index>* entities;
 	std::vector<Component*>* components;
 	/* * * * * * * * * * * * * * * * *\
 	*          entityNames
 	*   |  0  |  1  |  2  |  3  | 
 	*---|-----|-----|-----|-----|-
-	*   |name0|name1|name2|name3| 
+	*   |James|Logan|Jacob|Lucas| 
 	*---|-----|-----|-----|-----|-
 	*              entities
 	* component| 0 | 1 | 2 | 3 | 

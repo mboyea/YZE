@@ -1,11 +1,10 @@
-#ifndef TEST_SCRIPT_H
-#define TEST_SCRIPT_H
-#pragma once
+#ifndef PLAYER_SCRIPT_H
+#define PLAYER_SCRIPT_H
 
 #include "Script.h"
 #include "Transform.h"
 
-class TestScript : public Script {
+class PlayerScript : public Script {
 	INIT_SCRIPT;
 public:
 	Transform* transform;
@@ -14,4 +13,4 @@ public:
 	virtual void OnCollision(Entities::Index entity, Entities::Index rhs, Vector2i impulse) override;
 };
 
-#endif // !TEST_SCRIPT_H
+#endif // !PLAYER_SCRIPT_H

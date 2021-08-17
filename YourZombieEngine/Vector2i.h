@@ -5,11 +5,10 @@
 struct Vector2i {
 	int x;
 	int y;
-
-	inline Vector2i operator+(const Vector2i& rhs) {
+	Vector2i operator+(const Vector2i& rhs) const {
 		return { x + rhs.x, y + rhs.y };
 	}
-	Vector2i operator-(const Vector2i& rhs) {
+	Vector2i operator-(const Vector2i& rhs) const {
 		return { x - rhs.x, y - rhs.y };
 	}
 };

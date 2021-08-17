@@ -150,11 +150,17 @@
     <ClInclude Include="Collider.h">
       <Filter>Engine\Scene\Systems\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>Engine\Scene\Systems\Collider</Filter>
-    </ClInclude>
     <ClInclude Include="BoxCollider.h">
       <Filter>Engine\Scene\Systems\Collider\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Engine\Datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4i.h">
+      <Filter>Engine\Datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScript.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -236,14 +242,17 @@
     <ClCompile Include="ColliderSystem.cpp">
       <Filter>Engine\Scene\Systems\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>Engine\Scene\Systems\Collider</Filter>
-    </ClCompile>
     <ClCompile Include="Collider.cpp">
       <Filter>Engine\Scene\Systems\Collider</Filter>
     </ClCompile>
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Engine\Scene\Systems\Collider\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Engine\Datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScript.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include "Resource.h"
+#include "Entities.h"
 
 namespace Components {
 	typedef int TypeID;
@@ -16,6 +17,7 @@ class Component {
 private:
 	static const std::string name;
 public:
+	Entities::Index entity;
 	virtual Components::TypeID GetVirtualTypeID() {
 		return Components::INVALID_TYPE;
 	}

@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Draw.h"
 
+#include "ColliderSystem.h"
 #include "ScriptSystem.h"
 #include "SpriteSystem.h"
 
@@ -26,35 +27,52 @@ Scene::~Scene() {
 void Scene::Update() {
 	activeScene = this;
 	events.HandleEvents();
-	std::vector<Entities::Index> scriptLists;
-	{ // Get script lists
-		Entities::Index entity = 0;
-		for (Components::Index index : entities[ScriptList::GetTypeID()]) {
-			if (index >= 0) {
-				scriptLists.push_back(entity);
-			}
-			entity++;
-		}
+	for (Component* transform : components[Transform::GetTypeID()]) {
+		static_cast<Transform*>(transform)->lastPos = static_cast<Transform*>(transform)->pos;
 	}
-	for (Entities::Index scriptList : scriptLists) {
-		Systems::Scripts::Update(
-			GetComponent<ScriptList>(scriptList),
-			scriptList
-		);
+	for (Component* scriptList : components[ScriptList::GetTypeID()]) {
+		for (Script* script : static_cast<ScriptList*>(scriptList)->scripts) {
+			script->CallStart(scriptList->entity);
+			script->Update(scriptList->entity);
+		}
 	}
 	activeScene = nullptr;
 }
 
 void Scene::DoCollisions() {
 	activeScene = this;
-	std::vector<Entities::Index> scriptLists;
-	{ // Get script lists
-		Entities::Index entity = 0;
-		for (Components::Index index : entities[ScriptList::GetTypeID()]) {
-			if (index >= 0) {
-				scriptLists.push_back(entity);
+	// list of relevant colliders and their respective important components
+	std::vector<std::tuple<Collider*, Transform*, ScriptList*>> colliders;
+	for (Component* colliderList : components[ColliderList::GetTypeID()]) {
+		if (entities[Transform::GetTypeID()][colliderList->entity] >= 0) {
+			for (Collider* collider : static_cast<ColliderList*>(colliderList)->colliders) {
+				colliders.push_back(
+					{ collider,
+					GetComponent<Transform>(colliderList->entity),
+					GetComponent<ScriptList>(colliderList->entity) }
+				);
 			}
-			entity++;
+		}
+	}
+	for (auto lhs = colliders.begin(); lhs < colliders.end(); lhs++) {
+		for (auto rhs = lhs + 1; rhs < colliders.end(); rhs++) {
+			const Collision c = std::get<0>(*lhs)->DoCollision(
+				std::get<1>(*lhs),
+				std::get<0>(*rhs),
+				std::get<1>(*rhs)
+			);
+			if (c.didCollide) {
+				if (std::get<2>(*lhs)) {
+					for (Script* script : std::get<2>(*lhs)->scripts) {
+						script->OnCollision(std::get<1>(*lhs)->entity, std::get<1>(*rhs)->entity, c.impulse.first);
+					}
+				}
+				if (std::get<2>(*rhs)) {
+					for (Script* script : std::get<2>(*rhs)->scripts) {
+						script->OnCollision(std::get<1>(*rhs)->entity, std::get<1>(*lhs)->entity, c.impulse.second);
+					}
+				}
+			}
 		}
 	}
 	activeScene = nullptr;
@@ -62,14 +80,18 @@ void Scene::DoCollisions() {
 
 void Scene::LateUpdate() {
 	activeScene = this;
-
+	for (Component* scriptList : components[ScriptList::GetTypeID()]) {
+		for (Script* script : static_cast<ScriptList*>(scriptList)->scripts) {
+			script->LateUpdate(scriptList->entity);
+		}
+	}
 	activeScene = nullptr;
 }
 
 void Scene::Render() {
 	activeScene = this;
-	// TODO: identify common patterns of this implementation and condense it to smaller & repeated functions
-	// TODO: export the cameras and sprites vectors to their respective Systems namespaces.  Edit them on the creation and destruction of cameras and sprites.  Create a way to do the same for every component.
+	// TODO: CLEAN UP Render() FUNCTION
+	// TODO: IMPLEMENT depth VARIABLE
 	std::vector<Entities::Index> cameras;
 	{ // Get scene cameras
 		Entities::Index entity = 0;
@@ -159,9 +181,6 @@ void Scene::DeleteEntity(Entities::Index entity) {
 }
 
 Component* Scene::AddComponent(Components::TypeID type, Entities::Index entity) {
-	if (!IsEntity(entity)) {
-		return nullptr;
-	}
 	// if component already exists, return it
 	Components::Index index = entities[type][entity];
 	if (index >= 0) {
@@ -177,6 +196,7 @@ Component* Scene::AddComponent(Components::TypeID type, Entities::Index entity) 
 	}
 	entities[type][entity] = index;
 	components[type][index] = Components::IDToType(type);
+	components[type][index]->entity = entity;
 	return components[type][index];
 }
 

@@ -2,8 +2,26 @@
 const char Collider::str[] = "Collider";
 #include "ColliderSystem.h"
 
-Collider::Collider() {
+Collision Collider::DoNarrowCollision(Transform* transform, Collider* target, Transform* targetTransform) {
+	return Collision(false);
 }
 
-Collider::~Collider() {
+bool Collider::IsBroadColliding(Transform* transform, Collider* target, Transform* targetTransform) {
+	const Vector2i pos = transform->pos + aabb.GetPos();
+	const Vector2i targetPos = targetTransform->pos + target->aabb.GetPos();
+	return pos.x < targetPos.x + target->aabb.w
+		&& pos.x + aabb.w > targetPos.x
+		&& pos.y < targetPos.y + target->aabb.h
+		&& pos.y + aabb.h > targetPos.y;
+}
+
+Collision Collider::DoCollision(Transform* transform, Collider* target, Transform* targetTransform) {
+	if (IsBroadColliding(transform, target, targetTransform)) {
+		return DoNarrowCollision(transform, target, targetTransform);
+	}
+	return Collision(false);
+}
+
+Vector4i Collider::GetAABB() {
+	return aabb;
 }

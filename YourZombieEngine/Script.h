@@ -15,7 +15,9 @@ namespace Scripts {
 class Script {
 private:
 	static const std::string name;
+	bool didCallStart;
 public:
+	int depth;
 	virtual Scripts::TypeID GetVirtualTypeID() {
 		return Scripts::INVALID_TYPE;
 	}
@@ -28,10 +30,16 @@ public:
 	static std::string GetName() {
 		return name;
 	}
-	Script() {}
+	Script() : depth(0), didCallStart(false) {}
 	virtual void Start(Entities::Index entity) {}
+	void CallStart(Entities::Index entity) {
+		if (!didCallStart) {
+			Start(entity);
+			didCallStart = true;
+		}
+	};
 	virtual void Update(Entities::Index entity) {}
-	virtual void OnCollision(Collision* collision, Entities::Index entity) {}
+	virtual void OnCollision(Entities::Index entity, Entities::Index rhs, Vector2i impulse) {}
 	virtual void LateUpdate(Entities::Index entity) {}
 	virtual void Render(Entities::Index entity) {}
 	~Script() {}

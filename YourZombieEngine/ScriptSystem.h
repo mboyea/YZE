@@ -6,7 +6,6 @@
 
 namespace Systems {
 	namespace Scripts {
-		void Update(ScriptList* scripts, Entities::Index entity);
 	}
 }
 

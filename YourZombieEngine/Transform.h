@@ -8,6 +8,7 @@
 class Transform : public Component {
 	INIT_COMPONENT;
 public:
+	Vector2i lastPos;
 	Vector2i pos;
 	Transform();
 	virtual std::ostream& Serialize(std::ostream& os) override;
