@@ -37,7 +37,7 @@ protected:
 public:
 	bool doSolveCollision;
 	Collision DoCollision(Transform* transform, Collider* target, Transform* targetTransform);
-	Vector4i GetAABB();
+	const Vector4i& GetAABB() const;
 };
 
 namespace Colliders {

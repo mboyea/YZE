@@ -9,10 +9,10 @@ struct Vector4i {
 	int y;
 	int w;
 	int h;
-	Vector2i GetPos() {
+	const Vector2i GetPos() const {
 		return { x, y };
 	}
-	Vector2i GetDim() {
+	const Vector2i GetDim() const {
 		return { w, h };
 	}
 };

@@ -22,6 +22,6 @@ Collision Collider::DoCollision(Transform* transform, Collider* target, Transfor
 	return Collision(false);
 }
 
-Vector4i Collider::GetAABB() {
+const Vector4i& Collider::GetAABB() const {
 	return aabb;
 }
