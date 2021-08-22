@@ -54,7 +54,8 @@ int main(int argc, char** argv) {
 	enemyScriptList->scripts.push_back(enemyScript);
 	ColliderList* enemyColliderList = scene.AddComponent<ColliderList>(enemyEntitiy);
 	BoxCollider* enemyCollider = Colliders::New<BoxCollider>();
-	enemyCollider->SetBox({ 0, 0, 16, 16 });
+	enemySprite->dim = { 32, 32 };
+	enemyCollider->SetBox({ 0, 0, enemySprite->dim.x, enemySprite->dim.y });
 	enemyColliderList->colliders.push_back(enemyCollider);
 
 	while (true) {

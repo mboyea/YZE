@@ -5,21 +5,20 @@ REGISTER_SCRIPT(PlayerScript);
 
 void PlayerScript::Start(Entities::Index entity) {
 	transform = Scene::GetActiveScene()->AddComponent<Transform>(entity);
-	transform->pos = { 0, 0 };
 }
 
 void PlayerScript::Update(Entities::Index entity) {
 	if (Input::IsKeyDown(SDL_SCANCODE_W)) {
-		transform->pos.y--;
+		transform->pos.y -= 1;
 	}
 	if (Input::IsKeyDown(SDL_SCANCODE_S)) {
-		transform->pos.y++;
+		transform->pos.y += 1;
 	}
 	if (Input::IsKeyDown(SDL_SCANCODE_A)) {
-		transform->pos.x--;
+		transform->pos.x -= 1;
 	}
 	if (Input::IsKeyDown(SDL_SCANCODE_D)) {
-		transform->pos.x++;
+		transform->pos.x += 1;
 	}
 }
 

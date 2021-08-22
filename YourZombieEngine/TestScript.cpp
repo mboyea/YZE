@@ -5,7 +5,6 @@ REGISTER_SCRIPT(TestScript);
 
 void TestScript::Start(Entities::Index entity) {
 	transform = Scene::GetActiveScene()->AddComponent<Transform>(entity);
-	transform->pos = { 64, 64 };
 }
 
 void TestScript::Update(Entities::Index entity) {
