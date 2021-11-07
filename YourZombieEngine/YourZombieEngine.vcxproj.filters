@@ -162,6 +162,9 @@
     <ClInclude Include="PlayerScript.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Vector2f.h">
+      <Filter>Engine\Datatypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Random.cpp">

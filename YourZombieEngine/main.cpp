@@ -42,20 +42,23 @@ int main(int argc, char** argv) {
 	playerScriptList->scripts.push_back(playerScript);
 	ColliderList* playerColliderList = scene.AddComponent<ColliderList>(playerEntity);
 	BoxCollider* playerCollider = Colliders::New<BoxCollider>();
-	playerCollider->SetBox({ 0, 0, 16, 16 });
+	playerSprite->dim = { 16, 16 };
+	playerCollider->SetBox({ 0, 0, playerSprite->dim.x, playerSprite->dim.y });
 	playerCollider->doSolveCollision = true;
 	playerColliderList->colliders.push_back(playerCollider);
 
 	Entities::Index enemyEntitiy = scene.AddEntity();
-	scene.AddComponent<Transform>(enemyEntitiy);
+	Transform* enemyTransform = scene.AddComponent<Transform>(enemyEntitiy);
 	Sprite* enemySprite = scene.AddComponent<Sprite>(enemyEntitiy);
 	ScriptList* enemyScriptList = scene.AddComponent<ScriptList>(enemyEntitiy);
 	TestScript* enemyScript = Scripts::NewScript<TestScript>();
 	enemyScriptList->scripts.push_back(enemyScript);
 	ColliderList* enemyColliderList = scene.AddComponent<ColliderList>(enemyEntitiy);
 	BoxCollider* enemyCollider = Colliders::New<BoxCollider>();
-	enemySprite->dim = { 32, 32 };
+	enemyTransform->pos = { 64, 32 };
+	enemySprite->dim = { 24, 24 };
 	enemyCollider->SetBox({ 0, 0, enemySprite->dim.x, enemySprite->dim.y });
+	enemyCollider->doSolveCollision = false;
 	enemyColliderList->colliders.push_back(enemyCollider);
 
 	while (true) {
@@ -70,7 +73,7 @@ int main(int argc, char** argv) {
 		scene.Render();
 
 		Window::PresentWindow();
-		Time::LimitFramerate(60);
+		Time::LimitFramerate(24);
 	}
 	return 0;
 }

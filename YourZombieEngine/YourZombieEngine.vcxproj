@@ -181,6 +181,7 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Vector2f.h" />
     <ClInclude Include="Vector2i.h" />
     <ClInclude Include="Vector4i.h" />
     <ClInclude Include="Window.h" />
