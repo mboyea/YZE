@@ -9,16 +9,16 @@ void PlayerScript::Start(Entities::Index entity) {
 
 void PlayerScript::Update(Entities::Index entity) {
 	if (Input::IsKeyDown(SDL_SCANCODE_W)) {
-		transform->pos.y -= 1;
+		transform->pos.y -= 2;
 	}
 	if (Input::IsKeyDown(SDL_SCANCODE_S)) {
-		transform->pos.y += 1;
+		transform->pos.y += 2;
 	}
 	if (Input::IsKeyDown(SDL_SCANCODE_A)) {
-		transform->pos.x -= 1;
+		transform->pos.x -= 2;
 	}
 	if (Input::IsKeyDown(SDL_SCANCODE_D)) {
-		transform->pos.x += 1;
+		transform->pos.x += 2;
 	}
 }
 

@@ -3,6 +3,13 @@ REGISTER_COLLIDER(BoxCollider);
 #include "Vector2f.h"
 #include <math.h>
 
+// return a or b, whichever is closer to c
+int GetClosest(int a, int b, int c) {
+	if (std::abs(a - c) <= std::abs(b - c)) {
+		return a;
+	} else return b;
+}
+
 Vector2i GetLineIntersection(const Vector2i& a, const Vector2i& b, const Vector2i& c, const Vector2i& d) {
 	// line a-b represented as a1x + b1y = c1
 	const int a1 = b.y - a.y;
@@ -191,28 +198,37 @@ Vector2i SolveSoloBoxCollision(const Collider* lhsCollider, Transform* lhsTransf
 			} else { // lhs actually didn't move
 			}
 		}
-	} else { // RHS PUSHES LHS IN THE COLLISION AXIS WHILE LHS RETAINS ITS OTHER AXIS OF MOMENTUM// calculate at what % of distance they collide
+	} else { // RHS PUSHES LHS IN THE COLLISION AXIS WHILE LHS RETAINS ITS OTHER AXIS OF MOMENTUM
+		// calculate at what % of distance along their movement paths for each axis they travel for them to meet on that axis
+		/*const Vector2i lhsClosestVertex = {
+			GetClosest(lhsTransform->pos.x + lhsCollider->GetAABB().x, lhsTransform->pos.x + lhsCollider->GetAABB().x + lhsCollider->GetAABB().w, rhsTransform->pos.x + rhsCollider->GetAABB().x),
+			GetClosest(lhsTransform->pos.y + lhsCollider->GetAABB().y, lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h, rhsTransform->pos.y + rhsCollider->GetAABB().y)
+		};
+		const Vector2i rhsClosestVertex = {
+			GetClosest(rhsTransform->pos.x + rhsCollider->GetAABB().x, rhsTransform->pos.x + rhsCollider->GetAABB().x + rhsCollider->GetAABB().w, lhsTransform->pos.x + lhsCollider->GetAABB().x),
+			GetClosest(rhsTransform->pos.y + rhsCollider->GetAABB().y, rhsTransform->pos.y + rhsCollider->GetAABB().y + rhsCollider->GetAABB().h, lhsTransform->pos.y + lhsCollider->GetAABB().y)
+		};*/
 		Vector2f percentToCollide = {
 			(float)(lhsPathStart.x - rhsPathStart.x) / (float)(rhsMomentum.x - lhsMomentum.x),
 			(float)(lhsPathStart.y - rhsPathStart.y) / (float)(rhsMomentum.y - lhsMomentum.y)
 		};
-		if (rhsMomentum.x - lhsMomentum.x == 0 || rhsTransform->lastPos.x == rhsTransform->pos.x) {
+		if (rhsMomentum.x - lhsMomentum.x == 0) {
 			percentToCollide.x = -1;
 		}
-		if (rhsMomentum.y - lhsMomentum.y == 0 || rhsTransform->lastPos.y == rhsTransform->pos.y) {
+		if (rhsMomentum.y - lhsMomentum.y == 0) {
 			percentToCollide.y = -1;
 		}
-		if (percentToCollide.y > percentToCollide.x) { // rhs hits lhs top/or/bottom
-			if (std::abs(rhsPathStart.y - (lhsTransform->pos.y + lhsCollider->GetAABB().y)) > std::abs(rhsPathStart.y - (lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h))) { // rhs hits bottom of lhs
-				impulse.y = rhsTransform->pos.y + rhsCollider->GetAABB().y - (lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h);
-			} else { // rhs hits top of lhs
-				impulse.y = rhsTransform->pos.y + rhsCollider->GetAABB().y + rhsCollider->GetAABB().w - (lhsTransform->pos.y + lhsCollider->GetAABB().y);
-			}
-		} else { // rhs hits lhs left/or/right
+		if (percentToCollide.y < percentToCollide.x) { // rhs hits lhs left/or/right
 			if (std::abs(rhsPathStart.x - (lhsTransform->pos.x + lhsCollider->GetAABB().x)) > std::abs(rhsPathStart.x - (lhsTransform->pos.x + lhsCollider->GetAABB().x + lhsCollider->GetAABB().w))) { // rhs hits right of lhs
 				impulse.x = rhsTransform->pos.x + rhsCollider->GetAABB().x - (lhsTransform->pos.x + lhsCollider->GetAABB().x + lhsCollider->GetAABB().w);
 			} else { // rhs hits left of lhs
 				impulse.x = rhsTransform->pos.x + rhsCollider->GetAABB().x + rhsCollider->GetAABB().h - (lhsTransform->pos.x + lhsCollider->GetAABB().x);
+			}
+		} else { // rhs hits lhs top/or/bottom
+			if (std::abs(rhsPathStart.y - (lhsTransform->pos.y + lhsCollider->GetAABB().y)) > std::abs(rhsPathStart.y - (lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h))) { // rhs hits bottom of lhs
+				impulse.y = rhsTransform->pos.y + rhsCollider->GetAABB().y - (lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h);
+			} else { // rhs hits top of lhs
+				impulse.y = rhsTransform->pos.y + rhsCollider->GetAABB().y + rhsCollider->GetAABB().w - (lhsTransform->pos.y + lhsCollider->GetAABB().y);
 			}
 		}
 	}

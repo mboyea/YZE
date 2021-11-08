@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 	ColliderList* enemyColliderList = scene.AddComponent<ColliderList>(enemyEntitiy);
 	BoxCollider* enemyCollider = Colliders::New<BoxCollider>();
 	enemyTransform->pos = { 64, 32 };
-	enemySprite->dim = { 24, 24 };
+	enemySprite->dim = { 32, 8 };
 	enemyCollider->SetBox({ 0, 0, enemySprite->dim.x, enemySprite->dim.y });
 	enemyCollider->doSolveCollision = false;
 	enemyColliderList->colliders.push_back(enemyCollider);
