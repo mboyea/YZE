@@ -46,192 +46,36 @@ int UnsafeGetLineIntersectionX(const Vector2i& a, const Vector2i& b, const Vecto
 Vector2i SolveSoloBoxCollision(const Collider* lhsCollider, Transform* lhsTransform, const Collider* rhsCollider, const Transform* rhsTransform) {
 	Vector2i impulse = { 0, 0 };
 
-	const bool lhsIsRightLeading = lhsTransform->lastPos.x < lhsTransform->pos.x;
-	const bool lhsIsBottomLeading = lhsTransform->lastPos.y < lhsTransform->pos.y;
-	const Vector2i lhsLocalLeadingPoint = {
-		lhsCollider->GetAABB().x + int(lhsIsRightLeading) * lhsCollider->GetAABB().w,
-		lhsCollider->GetAABB().y + int(lhsIsBottomLeading) * lhsCollider->GetAABB().h
+	const bool lhsIsRightCollision = rhsTransform->lastPos.x + rhsCollider->GetAABB().x > lhsTransform->lastPos.x + lhsCollider->GetAABB().x;
+	const bool lhsIsBottomCollision = rhsTransform->lastPos.y + rhsCollider->GetAABB().y > lhsTransform->lastPos.y + lhsCollider->GetAABB().y;
+	const Vector2i lhsCollisionPoint = {
+		lhsTransform->lastPos.x + lhsCollider->GetAABB().x + int(lhsIsRightCollision) * lhsCollider->GetAABB().w,
+		lhsTransform->lastPos.y + lhsCollider->GetAABB().y + int(lhsIsBottomCollision) * lhsCollider->GetAABB().h
 	};
-	const Vector2i lhsPathStart = lhsTransform->lastPos + lhsLocalLeadingPoint;
-	const Vector2i lhsPathEnd = lhsTransform->pos + lhsLocalLeadingPoint;
+	const Vector2i rhsCollisionLine = {
+		rhsTransform->lastPos.x + rhsCollider->GetAABB().x + int(!lhsIsRightCollision) * rhsCollider->GetAABB().w,
+		rhsTransform->lastPos.y + rhsCollider->GetAABB().y + int(!lhsIsBottomCollision) * rhsCollider->GetAABB().h
+	};
 	const Vector2i lhsMomentum = lhsTransform->pos - lhsTransform->lastPos;
-
-	const bool rhsIsRightLeading = rhsTransform->lastPos.x < rhsTransform->pos.x;
-	const bool rhsIsBottomLeading = rhsTransform->lastPos.y < rhsTransform->pos.y;
-	const Vector2i rhsLocalLeadingPoint = {
-		rhsCollider->GetAABB().x + int(rhsIsRightLeading) * rhsCollider->GetAABB().w,
-		rhsCollider->GetAABB().y + int(rhsIsBottomLeading) * rhsCollider->GetAABB().h
-	};
-	const Vector2i rhsPathStart = rhsTransform->lastPos + rhsLocalLeadingPoint;
-	const Vector2i rhsPathEnd = rhsTransform->pos + rhsLocalLeadingPoint;
 	const Vector2i rhsMomentum = rhsTransform->pos - rhsTransform->lastPos;
-
-	if (lhsMomentum.x == 0 && lhsMomentum.y == 0) { // RHS PUSHES LHS COMPLETELY
-		if (rhsTransform->lastPos.y < rhsTransform->pos.y) { // rhs didn't hit the bottom of lhs
-			const Vector2i lhsTopLeft = lhsTransform->pos + lhsCollider->GetAABB().GetPos();
-			const Vector2i lhsTopRight = {
-				lhsTransform->pos.x + lhsCollider->GetAABB().x + lhsCollider->GetAABB().w,
-				lhsTransform->pos.y + lhsCollider->GetAABB().y
-			};
-			if (rhsTransform->lastPos.x < rhsTransform->pos.x) { // rhs didn't hit the right of lhs
-				if (UnsafeGetLineIntersectionX(rhsPathStart, rhsPathEnd, lhsTopLeft, lhsTopRight) >= lhsTopLeft.x) {
-					// hit TOP
-					impulse.y = rhsPathEnd.y - lhsTopLeft.y;
-				} else {
-					// hit LEFT
-					impulse.x = rhsPathEnd.x - lhsTopLeft.x;
-				}
-			} else if (rhsTransform->lastPos.x > rhsTransform->pos.x) { // rhs didn't hit the left of lhs
-				if (UnsafeGetLineIntersectionX(rhsPathStart, rhsPathEnd, lhsTopLeft, lhsTopRight) <= lhsTopRight.x) {
-					// hit TOP
-					impulse.y = rhsPathEnd.y - lhsTopLeft.y;
-				} else {
-					// hit RIGHT
-					impulse.x = rhsPathEnd.x - lhsTopRight.x;
-				}
-			} else { // rhs didn't hit the side of lhs
-				// hit TOP
-				impulse.y = rhsPathEnd.y - lhsTopLeft.y;
-			}
-		} else if (rhsTransform->lastPos.y > rhsTransform->pos.y) { // rhs didn't hit the top of lhs
-			const Vector2i lhsBottomLeft = {
-				lhsTransform->pos.x + lhsCollider->GetAABB().x,
-				lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h
-			};
-			const Vector2i lhsBottomRight = {
-				lhsTransform->pos.x + lhsCollider->GetAABB().x + lhsCollider->GetAABB().w,
-				lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h
-			};
-			if (rhsTransform->lastPos.x < rhsTransform->pos.x) { // rhs didn't hit the right of lhs
-				if (UnsafeGetLineIntersectionX(rhsPathStart, rhsPathEnd, lhsBottomLeft, lhsBottomRight) >= lhsBottomLeft.x) {
-					// hit BOTTOM
-					impulse.y = rhsPathEnd.y - lhsBottomLeft.y;
-				} else {
-					// hit LEFT
-					impulse.x = rhsPathEnd.x - lhsBottomLeft.x;
-				}
-			} else if (rhsTransform->lastPos.x > rhsTransform->pos.x) { // rhs didn't hit the left of lhs
-				if (UnsafeGetLineIntersectionX(rhsPathStart, rhsPathEnd, lhsBottomLeft, lhsBottomRight) <= lhsBottomRight.x) {
-					// hit BOTTOM
-					impulse.y = rhsPathEnd.y - lhsBottomLeft.y;
-				} else {
-					// hit RIGHT
-					impulse.x = rhsPathEnd.x - lhsBottomRight.x;
-				}
-			} else { // rhs didn't hit the side of lhs
-				// hit BOTTOM
-				impulse.y = rhsPathEnd.y - lhsBottomLeft.y;
-			}
-		} else { // rhs hit the side of lhs
-			if (rhsTransform->lastPos.x < rhsTransform->pos.x) { // rhs didn't hit the right of lhs
-				// hit LEFT
-				impulse.x = rhsPathEnd.x - lhsTransform->pos.x - lhsCollider->GetAABB().x;
-			} else if (rhsTransform->lastPos.x > rhsTransform->pos.x) { // rhs didn't hit the left of lhs
-				// hit RIGHT
-				impulse.x = rhsPathEnd.x - lhsTransform->pos.x - lhsCollider->GetAABB().x - lhsCollider->GetAABB().w;
-			} else { // rhs actually didn't move
-			}
-		}
-	} else if (rhsMomentum.x == 0 && rhsMomentum.y == 0) { // RHS STOPS LHS COMPLETELY
-		if (lhsTransform->lastPos.y < lhsTransform->pos.y) { // lhs didn't hit the bottom of rhs
-			const Vector2i rhsTopLeft = rhsTransform->pos + rhsCollider->GetAABB().GetPos();
-			const Vector2i rhsTopRight = {
-				rhsTransform->pos.x + rhsCollider->GetAABB().x + rhsCollider->GetAABB().w,
-				rhsTransform->pos.y + rhsCollider->GetAABB().y
-			};
-			if (lhsTransform->lastPos.x < lhsTransform->pos.x) { // lhs didn't hit the right of rhs
-				if (UnsafeGetLineIntersectionX(lhsPathStart, lhsPathEnd, rhsTopLeft, rhsTopRight) >= rhsTopLeft.x) {
-					// hit TOP
-					impulse.y = rhsTopLeft.y - lhsPathEnd.y;
-				} else {
-					// hit LEFT
-					impulse.x = rhsTopLeft.x - lhsPathEnd.x;
-				}
-			} else if (lhsTransform->lastPos.x > lhsTransform->pos.x) { // lhs didn't hit the left of rhs
-				if (UnsafeGetLineIntersectionX(lhsPathStart, lhsPathEnd, rhsTopLeft, rhsTopRight) <= rhsTopRight.x) {
-					// hit TOP
-					impulse.y = rhsTopLeft.y - lhsPathEnd.y;
-				} else {
-					// hit RIGHT
-					impulse.x = rhsTopRight.x - lhsPathEnd.x;
-				}
-			} else { // lhs didn't hit the side of rhs
-				// hit TOP
-				impulse.y = rhsTopLeft.y - lhsPathEnd.y;
-			}
-		} else if (lhsTransform->lastPos.y > lhsTransform->pos.y) { // lhs didn't hit the top of rhs
-			const Vector2i rhsBottomLeft = {
-				rhsTransform->pos.x + rhsCollider->GetAABB().x,
-				rhsTransform->pos.y + rhsCollider->GetAABB().y + rhsCollider->GetAABB().h
-			};
-			const Vector2i rhsBottomRight = {
-				rhsTransform->pos.x + rhsCollider->GetAABB().x + rhsCollider->GetAABB().w,
-				rhsTransform->pos.y + rhsCollider->GetAABB().y + rhsCollider->GetAABB().h
-			};
-			if (lhsTransform->lastPos.x < lhsTransform->pos.x) { // lhs didn't hit the right of rhs
-				if (UnsafeGetLineIntersectionX(lhsPathStart, lhsPathEnd, rhsBottomLeft, rhsBottomRight) >= rhsBottomLeft.x) {
-					// hit BOTTOM
-					impulse.y = rhsBottomLeft.y - lhsPathEnd.y;
-				} else {
-					// hit LEFT
-					impulse.x = rhsBottomLeft.x - lhsPathEnd.x;
-				}
-			} else if (lhsTransform->lastPos.x > lhsTransform->pos.x) { // lhs didn't hit the left of rhs
-				if (UnsafeGetLineIntersectionX(lhsPathStart, lhsPathEnd, rhsBottomLeft, rhsBottomRight) <= rhsBottomRight.x) {
-					// hit BOTTOM
-					impulse.y = rhsBottomLeft.y - lhsPathEnd.y;
-				} else {
-					// hit RIGHT
-					impulse.x = rhsBottomRight.x - lhsPathEnd.x;
-				}
-			} else { // lhs didn't hit the side of rhs
-				// hit BOTTOM
-				impulse.y = rhsBottomLeft.y - lhsPathEnd.y;
-			}
-		} else { // lhs hit the side of rhs
-			if (lhsTransform->lastPos.x < lhsTransform->pos.x) { // lhs didn't hit the right of rhs
-				// hit LEFT
-				impulse.x = rhsTransform->pos.x + rhsCollider->GetAABB().x - lhsPathEnd.x;
-			} else if (lhsTransform->lastPos.x > lhsTransform->pos.x) { // lhs didn't hit the left of rhs
-				// hit RIGHT
-				impulse.x = rhsTransform->pos.x + rhsCollider->GetAABB().x + rhsCollider->GetAABB().w - lhsPathEnd.x;
-			} else { // lhs actually didn't move
-			}
-		}
-	} else { // RHS PUSHES LHS IN THE COLLISION AXIS WHILE LHS RETAINS ITS OTHER AXIS OF MOMENTUM
-		// calculate at what % of distance along their movement paths for each axis they travel for them to meet on that axis
-		/*const Vector2i lhsClosestVertex = {
-			GetClosest(lhsTransform->pos.x + lhsCollider->GetAABB().x, lhsTransform->pos.x + lhsCollider->GetAABB().x + lhsCollider->GetAABB().w, rhsTransform->pos.x + rhsCollider->GetAABB().x),
-			GetClosest(lhsTransform->pos.y + lhsCollider->GetAABB().y, lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h, rhsTransform->pos.y + rhsCollider->GetAABB().y)
-		};
-		const Vector2i rhsClosestVertex = {
-			GetClosest(rhsTransform->pos.x + rhsCollider->GetAABB().x, rhsTransform->pos.x + rhsCollider->GetAABB().x + rhsCollider->GetAABB().w, lhsTransform->pos.x + lhsCollider->GetAABB().x),
-			GetClosest(rhsTransform->pos.y + rhsCollider->GetAABB().y, rhsTransform->pos.y + rhsCollider->GetAABB().y + rhsCollider->GetAABB().h, lhsTransform->pos.y + lhsCollider->GetAABB().y)
-		};*/
-		Vector2f percentToCollide = {
-			(float)(lhsPathStart.x - rhsPathStart.x) / (float)(rhsMomentum.x - lhsMomentum.x),
-			(float)(lhsPathStart.y - rhsPathStart.y) / (float)(rhsMomentum.y - lhsMomentum.y)
-		};
-		if (rhsMomentum.x - lhsMomentum.x == 0) {
-			percentToCollide.x = -1;
-		}
-		if (rhsMomentum.y - lhsMomentum.y == 0) {
-			percentToCollide.y = -1;
-		}
-		if (percentToCollide.y < percentToCollide.x) { // rhs hits lhs left/or/right
-			if (std::abs(rhsPathStart.x - (lhsTransform->pos.x + lhsCollider->GetAABB().x)) > std::abs(rhsPathStart.x - (lhsTransform->pos.x + lhsCollider->GetAABB().x + lhsCollider->GetAABB().w))) { // rhs hits right of lhs
-				impulse.x = rhsTransform->pos.x + rhsCollider->GetAABB().x - (lhsTransform->pos.x + lhsCollider->GetAABB().x + lhsCollider->GetAABB().w);
-			} else { // rhs hits left of lhs
-				impulse.x = rhsTransform->pos.x + rhsCollider->GetAABB().x + rhsCollider->GetAABB().h - (lhsTransform->pos.x + lhsCollider->GetAABB().x);
-			}
-		} else { // rhs hits lhs top/or/bottom
-			if (std::abs(rhsPathStart.y - (lhsTransform->pos.y + lhsCollider->GetAABB().y)) > std::abs(rhsPathStart.y - (lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h))) { // rhs hits bottom of lhs
-				impulse.y = rhsTransform->pos.y + rhsCollider->GetAABB().y - (lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h);
-			} else { // rhs hits top of lhs
-				impulse.y = rhsTransform->pos.y + rhsCollider->GetAABB().y + rhsCollider->GetAABB().w - (lhsTransform->pos.y + lhsCollider->GetAABB().y);
-			}
-		}
+	float ty;
+	float tx;
+	if (rhsMomentum.y == lhsMomentum.y) ty = -1.f;
+	else if (rhsCollisionLine.y == lhsCollisionPoint.y) ty = 0.f;
+	else ty = (float)(rhsCollisionLine.y - lhsCollisionPoint.y) / (float)(lhsMomentum.y - rhsMomentum.y);
+	if (rhsMomentum.x == lhsMomentum.x) tx = -1.f;
+	else if (rhsCollisionLine.x == lhsCollisionPoint.x) tx = 0.f;
+	else tx = (float)(rhsCollisionLine.x - lhsCollisionPoint.x) / (float)(lhsMomentum.x - rhsMomentum.x);
+	if ((ty >= tx && ty <= 1.f) || tx >= 1.f) { // rhs hits lhs on top/or/bottom side
+		if (lhsIsBottomCollision)
+			impulse.y = rhsTransform->pos.y + rhsCollider->GetAABB().y - (lhsTransform->pos.y + lhsCollider->GetAABB().y + lhsCollider->GetAABB().h);
+		else impulse.y = rhsTransform->pos.y + rhsCollider->GetAABB().y + rhsCollider->GetAABB().h - (lhsTransform->pos.y + lhsCollider->GetAABB().y);
+	} else { // rhs hits lhs on left/or/right side
+		if (lhsIsRightCollision)
+			impulse.x = rhsTransform->pos.x + rhsCollider->GetAABB().x - (lhsTransform->pos.x + lhsCollider->GetAABB().x + lhsCollider->GetAABB().w);
+		else impulse.x = rhsTransform->pos.x + rhsCollider->GetAABB().x + rhsCollider->GetAABB().w - (lhsTransform->pos.x + lhsCollider->GetAABB().x);
 	}
+
 	lhsTransform->pos += impulse;
 	return impulse;
 }
