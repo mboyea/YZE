@@ -59,7 +59,11 @@ void Sprite::SetClipDim(Vector2i dim) {
 }
 
 std::set<Resource>& Sprite::GetRequiredResources(std::set<Resource>& resourcesOut){
-	// TODO: logic
+	Component::GetRequiredResources(resourcesOut);
+	std::string key = Textures::GetKey(texture);
+	if (key != "") {
+		resourcesOut.insert(Resource(key, RESOURCE_TEXTURE));
+	}
 	return resourcesOut;
 }
 

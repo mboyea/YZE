@@ -2,6 +2,8 @@
 #define SCRIPT_H
 #pragma once
 
+#include <set>
+#include "Resource.h"
 #include "Entities.h"
 #include <vector>
 #include <string>
@@ -38,6 +40,7 @@ public:
 			didCallStart = true;
 		}
 	};
+	virtual std::set<Resource>& GetRequiredResources(std::set<Resource>& resourcesOut);
 	virtual void Update(Entities::Index entity) {}
 	virtual void OnCollision(Entities::Index entity, Entities::Index rhs, Vector2i impulse) {}
 	virtual void LateUpdate(Entities::Index entity) {}

@@ -137,7 +137,17 @@ Scene* Scene::GetActiveScene() {
 }
 
 std::set<Resource>& Scene::GetRequiredResources(std::set<Resource>& resourcesOut) {
-	// TODO: determine required resources
+	// for every component
+	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
+		// for every entity
+		for (Entities::Index entity : entities[type]) {
+			// if the entity has that component
+			if (entities[type][entity] >= 0) {
+				// get required resources of that component
+				components[type][entities[type][entity]]->GetRequiredResources(resourcesOut);
+			}
+		}
+	}
 	return resourcesOut;
 }
 

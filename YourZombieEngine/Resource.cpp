@@ -1,13 +1,13 @@
 #include "Resource.h"
 std::string Resource::textureFolderPath = "Resources/Textures";
-std::string Resource::animationFolderPath = "Resources/Animations";
-std::string Resource::fontFolderPath = "Resources/Fonts";
-std::string Resource::audioFolderPath = "Resources/Audio";
-std::string Resource::textFolderPath = "Resources/Text";
 std::string Resource::textureExtension = "png";
+std::string Resource::animationFolderPath = "Resources/Animations";
 std::string Resource::animationExtension = "zanim";
+std::string Resource::fontFolderPath = "Resources/Fonts";
 std::string Resource::fontExtension = "ttf";
+std::string Resource::audioFolderPath = "Resources/Audio";
 std::string Resource::audioExtension = "mp3";
+std::string Resource::textFolderPath = "Resources/Text";
 std::string Resource::textExtension = "txt";
 #include "Files.h"
 #include "Textures.h"
@@ -16,8 +16,13 @@ std::string Resource::textExtension = "txt";
 #include "Audio.h"
 // #include "Text.h"
 
-bool Resource::operator<(const Resource& rhs) {
-	return type < rhs.type || name < rhs.name;
+std::ostream& operator<<(std::ostream& os, const Resource& rhs) {
+	return os << Files::EncodeString(rhs.name);
+}
+
+std::istream& operator>>(std::istream& is, Resource& rhs) {
+	rhs.name = Files::DecodeString(is);
+	return is;
 }
 
 std::string Resource::TypeToString() {
@@ -57,16 +62,11 @@ std::string Resource::GetFilePath() {
 		return Files::ForceFilePath(name, "ERROR", "resourceerror");
 	}
 }
-/*
-std::ostream& operator<<(std::ostream& os, const Resource& rhs) {
-	return os << Files::EncodeString(rhs.name);
+
+bool operator<(const Resource& lhs, const Resource& rhs) {
+	return lhs.type < rhs.type || lhs.name < rhs.name;
 }
 
-std::istream& operator>>(std::istream& is, Resource& rhs) {
-	rhs.name = Files::DecodeString(is);
-	return is;
-}
-*/
 bool LoadResource(Resource resource) {
 	std::string filePath = resource.GetFilePath();
 	switch (resource.type) {
