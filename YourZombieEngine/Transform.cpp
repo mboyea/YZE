@@ -2,14 +2,13 @@
 REGISTER_COMPONENT(Transform);
 
 Transform::Transform()
-	: pos({ 0, 0 }) {}
+	: pos({ 0, 0 }), lastPos({ 0, 0 }) {}
 
 std::ostream& Transform::Serialize(std::ostream& os) {
-	// TODO: logic
-	return os;
+	return os << Transform::GetTypeID()
+		<< ' ' << pos << ' ' << lastPos;
 }
 
 std::istream& Transform::Deserialize(std::istream& is) {
-	// TODO: logic
-	return is;
+	return is >> pos >> lastPos;
 }

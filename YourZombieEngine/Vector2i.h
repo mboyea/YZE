@@ -2,6 +2,8 @@
 #define VECTOR2I_H
 #pragma once
 
+#include <iostream>
+
 struct Vector2i {
 	int x;
 	int y;
@@ -20,6 +22,12 @@ struct Vector2i {
 		x -= rhs.x;
 		y -= rhs.y;
 		return *this;
+	}
+	friend std::ostream& operator<<(std::ostream& os, const Vector2i& rhs) {
+		return os << rhs.x << ' ' << rhs.y;
+	}
+	friend std::istream& operator>>(std::istream& is, Vector2i& rhs) {
+		return is >> rhs.x >> rhs.y;
 	}
 };
 

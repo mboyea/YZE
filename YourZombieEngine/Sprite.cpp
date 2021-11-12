@@ -2,6 +2,7 @@
 REGISTER_COMPONENT(Sprite);
 #include "SpriteSystem.h"
 #include "Textures.h"
+#include "Files.h"
 
 Sprite::Sprite()
 	: texture(Textures::GetDefault()), dim({ 16, 16 }), clipRect(nullptr), depth(0) {}
@@ -68,11 +69,12 @@ std::set<Resource>& Sprite::GetRequiredResources(std::set<Resource>& resourcesOu
 }
 
 std::ostream& Sprite::Serialize(std::ostream& os) {
-	// TODO: logic
-	return os;
+	return os << Sprite::GetTypeID()
+		<< ' ' << Files::EncodeString(Textures::GetKey(texture))
+		<< ' ' << dim;
 }
 
 std::istream& Sprite::Deserialize(std::istream& is) {
-	// TODO: logic
-	return is;
+	texture = Textures::GetTexture(Files::DecodeString(is));
+	return is >> dim;
 }

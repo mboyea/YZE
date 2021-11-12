@@ -152,7 +152,55 @@ std::set<Resource>& Scene::GetRequiredResources(std::set<Resource>& resourcesOut
 }
 
 std::ostream& Scene::Serialize(std::ostream& os) {
-	// TODO: serialize scene
+	{ // Serialize Scene Version
+		os << SCENE_VERSION << '\n';
+	}
+	{ // Serialize Typemap
+		// TODO: serialize a lookup table between component names and type numbers
+	}
+	{ // Serialize Scene Camera
+		// TODO: activeCamera->Serialize(os) << '\n';
+	}
+	{ // Serialize Required Resources
+		std::set<Resource> resources;
+		GetRequiredResources(resources);
+		int type = 0;
+		int index = 0;
+		int indexCount = resources.size() - 1;
+		for (Resource resource : resources) {
+			while (type < resource.type) {
+				os << '\n';
+				type++;
+			}
+			os << resource;
+			if (index < indexCount) {
+				os << ' ';
+			}
+			index++;
+		}
+		while (type < MAX_RESOURCE_TYPES - 1) {
+			type++;
+			os << '\n';
+		}
+		os << '\n';
+	}
+	{ // Serialize Scene Entities
+		// for every entity
+		for (Entities::Index entity : entities[0]) {
+			// for every component
+			for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
+				// if the entity has that component
+				if (entities[type][entity] >= 0) {
+					// serialize that component
+					components[type][entities[type][entity]]->Serialize(os);
+				}
+			}
+		}
+		os << '\n';
+	}
+	{ // Mark the last line as not an Entity
+		os << Components::INVALID_TYPE;
+	}
 	return os;
 }
 

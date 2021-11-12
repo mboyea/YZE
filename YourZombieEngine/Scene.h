@@ -10,6 +10,8 @@
 #include <vector>
 #include <queue>
 
+#define SCENE_VERSION "0.0.0"
+
 namespace Components {
 	typedef short Index;
 	const Index NO_COMPONENT = -1;
