@@ -58,9 +58,10 @@ int main(int argc, char** argv) {
 	enemyTransform->pos = { 64, 32 };
 	enemySprite->dim = { 24, 8 };
 	enemyCollider->SetBox({ 0, 0, enemySprite->dim.x, enemySprite->dim.y });
-	enemyCollider->doSolveCollision = true
-		;
+	enemyCollider->doSolveCollision = true;
 	enemyColliderList->colliders.push_back(enemyCollider);
+
+	// scene.Serialize(std::cout);
 
 	while (true) {
 		Window::HandleEvents();

@@ -24,8 +24,7 @@ Camera::operator SDL_Texture* () const {
 }
 
 std::ostream& Camera::Serialize(std::ostream& os) {
-  return os << Camera::GetTypeID()
-    << ' ' << GetDim();
+  return Component::Serialize(os) << ' ' << GetDim();
 }
 
 std::istream& Camera::Deserialize(std::istream& is) {

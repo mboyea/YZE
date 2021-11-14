@@ -15,11 +15,11 @@ namespace Colliders {
 
 class Collider {
 public:
-	static constexpr Colliders::TypeID GetColliderID() {
+	static constexpr Colliders::TypeID GetTypeID() {
 		return Colliders::INVALID_TYPE;
 	}
-	virtual const Colliders::TypeID VirtualGetColliderID() {
-		return GetColliderID();
+	virtual const Colliders::TypeID VirtualGetTypeID() {
+		return GetTypeID();
 	}
 	static constexpr const char* ToString() {
 		return str;
@@ -38,6 +38,8 @@ public:
 	bool doSolveCollision;
 	Collision DoCollision(Transform* transform, Collider* target, Transform* targetTransform);
 	const Vector4i& GetAABB() const;
+	virtual std::ostream& Serialize(std::ostream& os);
+	virtual std::istream& Deserialize(std::istream& is);
 };
 
 namespace Colliders {
@@ -53,10 +55,10 @@ namespace Colliders {
 		return typeArray[id]();
 	}
 	template<typename T> inline T* New() {
-		return static_cast<T*>(New(T::GetColliderID()));
+		return static_cast<T*>(New(T::GetTypeID()));
 	}
 	template<typename T> inline TypeID GetTypeID() {
-		return T::GetColliderID();
+		return T::GetTypeID();
 	}
 	inline TypeID GetTypeCount() {
 		return typeArray.size();
@@ -64,11 +66,11 @@ namespace Colliders {
 }
 
 #define INIT_COLLIDER public:	\
-static constexpr Colliders::TypeID GetColliderID() {	\
+static constexpr Colliders::TypeID GetTypeID() {	\
 return typeID;	\
 }	\
-virtual const Colliders::TypeID VirtualGetColliderID() override {	\
-return GetColliderID();	\
+virtual const Colliders::TypeID VirtualGetTypeID() override {	\
+return GetTypeID();	\
 }	\
 static constexpr const char* ToString() {	\
 return str;	\

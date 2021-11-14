@@ -25,3 +25,11 @@ Collision Collider::DoCollision(Transform* transform, Collider* target, Transfor
 const Vector4i& Collider::GetAABB() const {
 	return aabb;
 }
+
+std::ostream& Collider::Serialize(std::ostream& os) {
+	return os << VirtualGetTypeID() << ' ' << doSolveCollision;
+}
+
+std::istream& Collider::Deserialize(std::istream& is) {
+	return is >> doSolveCollision;
+}

@@ -135,3 +135,11 @@ Vector2i BoxCollider::GetPos() {
 Vector2i BoxCollider::GetDim() {
 	return aabb.GetDim();
 }
+
+std::ostream& BoxCollider::Serialize(std::ostream& os) {
+	return Collider::Serialize(os) << ' ' << aabb;
+}
+
+std::istream& BoxCollider::Deserialize(std::istream& is) {
+	return Collider::Deserialize(is) >> aabb;
+}

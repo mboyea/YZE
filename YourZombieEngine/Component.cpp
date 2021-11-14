@@ -6,7 +6,7 @@ std::set<Resource>& Component::GetRequiredResources(std::set<Resource>& resource
 }
 
 std::ostream& Component::Serialize(std::ostream& os) {
-	return os << Component::GetTypeID();
+	return os << GetVirtualTypeID();
 }
 
 std::istream& Component::Deserialize(std::istream& is) {

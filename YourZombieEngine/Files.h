@@ -7,6 +7,7 @@
 
 namespace Files {
 	const char TEXT_END = '\\';
+	const char ARRAY_END = ';';
 	std::string EncodeString(std::string str);
 	std::string DecodeString(std::string str);
 	std::string DecodeString(std::istream& is);

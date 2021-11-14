@@ -69,7 +69,7 @@ std::set<Resource>& Sprite::GetRequiredResources(std::set<Resource>& resourcesOu
 }
 
 std::ostream& Sprite::Serialize(std::ostream& os) {
-	return os << Sprite::GetTypeID()
+	return Component::Serialize(os)
 		<< ' ' << Files::EncodeString(Textures::GetKey(texture))
 		<< ' ' << dim;
 }

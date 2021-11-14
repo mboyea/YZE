@@ -20,7 +20,7 @@ private:
 	bool didCallStart;
 public:
 	int depth;
-	virtual Scripts::TypeID GetVirtualTypeID() {
+	virtual Scripts::TypeID VirtualGetTypeID() {
 		return Scripts::INVALID_TYPE;
 	}
 	static constexpr Scripts::TypeID GetTypeID() {
@@ -40,12 +40,14 @@ public:
 			didCallStart = true;
 		}
 	};
-	virtual std::set<Resource>& GetRequiredResources(std::set<Resource>& resourcesOut);
+	~Script() {}
 	virtual void Update(Entities::Index entity) {}
 	virtual void OnCollision(Entities::Index entity, Entities::Index rhs, Vector2i impulse) {}
 	virtual void LateUpdate(Entities::Index entity) {}
 	virtual void Render(Entities::Index entity) {}
-	~Script() {}
+	virtual std::set<Resource>& GetRequiredResources(std::set<Resource>& resourcesOut);
+	virtual std::ostream& Serialize(std::ostream& os);
+	virtual std::istream& Deserialize(std::istream& is);
 };
 
 namespace Scripts {
@@ -72,7 +74,7 @@ namespace Scripts {
 }
 
 #define INIT_SCRIPT public:	\
-virtual Scripts::TypeID GetVirtualTypeID() override {	\
+virtual Scripts::TypeID VirtualGetTypeID() override {	\
 return typeID;	\
 }	\
 static constexpr Scripts::TypeID GetTypeID() {	\

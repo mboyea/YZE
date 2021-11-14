@@ -14,6 +14,8 @@ public:
 	void SetDim(Vector2i dim);
 	Vector2i GetPos();
 	Vector2i GetDim();
+	virtual std::ostream& Serialize(std::ostream& os) override;
+	virtual std::istream& Deserialize(std::istream& is) override;
 };
 
 #endif // !BOX_COLLIDER_H
