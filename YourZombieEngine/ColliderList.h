@@ -10,6 +10,7 @@ class ColliderList : public Component {
 	INIT_COMPONENT;
 public:
 	std::vector<Collider*> colliders;
+	virtual ~ColliderList() override;
 	virtual std::ostream& Serialize(std::ostream& os) override;
 	virtual std::istream& Deserialize(std::istream& is) override;
 };

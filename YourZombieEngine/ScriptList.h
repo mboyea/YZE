@@ -10,6 +10,7 @@ class ScriptList : public Component {
 	INIT_COMPONENT;
 public:
 	std::vector<Script*> scripts;
+	virtual ~ScriptList() override;
 	virtual std::set<Resource>& GetRequiredResources(std::set<Resource>& resourcesOut) override;
 	virtual std::ostream& Serialize(std::ostream& os) override;
 	virtual std::istream& Deserialize(std::istream& is) override;

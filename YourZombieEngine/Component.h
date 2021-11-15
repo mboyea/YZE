@@ -18,6 +18,7 @@ private:
 	static const std::string name;
 public:
 	Entities::Index entity;
+	virtual ~Component();
 	virtual Components::TypeID GetVirtualTypeID() {
 		return Components::INVALID_TYPE;
 	}

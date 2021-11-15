@@ -16,7 +16,7 @@ public:
 	Sprite();
 	Sprite(SDL_Texture* texture);
 	Sprite(SDL_Texture* texture, Vector2i dim);
-	~Sprite();
+	virtual ~Sprite() override;
 	Vector2i GetTextureDim();
 	void DisableClip();
 	const SDL_Rect* GetClip();

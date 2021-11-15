@@ -2,6 +2,12 @@
 REGISTER_COMPONENT(ScriptList);
 #include "Files.h"
 
+ScriptList::~ScriptList() {
+	for (Script* collider : scripts) {
+		delete collider;
+	}
+}
+
 std::set<Resource>& ScriptList::GetRequiredResources(std::set<Resource>& resourcesOut) {
 	Component::GetRequiredResources(resourcesOut);
 	for (Script* script : scripts) {

@@ -28,9 +28,9 @@ int main(int argc, char** argv) {
 
 	Scene scene = Scene();
 
-	Entities::Index entityCamera = scene.AddEntity();
-	scene.AddComponent<Transform>(entityCamera);
-	scene.activeCamera = scene.AddComponent<Camera>(entityCamera);
+	Entities::Index cameraEntity = scene.AddEntity();
+	scene.AddComponent<Transform>(cameraEntity);
+	scene.activeCamera = scene.AddComponent<Camera>(cameraEntity);
 	scene.activeCamera->SetDim({ 128, 96 });
 	Window::SetRenderTarget(scene.activeCamera->GetTexture());
 
@@ -61,9 +61,9 @@ int main(int argc, char** argv) {
 	enemyCollider->doSolveCollision = true;
 	enemyColliderList->colliders.push_back(enemyCollider);
 
-	// scene.Serialize(std::cout);
+	scene.Serialize(std::cout);
 
-	while (true) {
+	while (false) {
 		Window::HandleEvents();
 		Input::HandleEvents();
 
@@ -77,5 +77,6 @@ int main(int argc, char** argv) {
 		Window::PresentWindow();
 		Time::LimitFramerate(24);
 	}
+	// delete &scene;
 	return 0;
 }

@@ -1,6 +1,8 @@
 #include "Component.h"
 const std::string Component::name = "Component";
 
+Component::~Component() {}
+
 std::set<Resource>& Component::GetRequiredResources(std::set<Resource>& resourcesOut) {
 	return resourcesOut;
 }

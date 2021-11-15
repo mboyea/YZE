@@ -72,6 +72,7 @@ public:
 	bool IsEntity(Entities::Index entity);
 	Entities::Index AddEntity();
 	void DeleteEntity(Entities::Index entity);
+	Entities::Index GetEntityWithComponent(Component* component);
 	Component* AddComponent(Components::TypeID type, Entities::Index entity);
 	template<typename T> T* AddComponent(Entities::Index entity) {
 		return static_cast<T*>(AddComponent(Components::TypeToID<T>(), entity));

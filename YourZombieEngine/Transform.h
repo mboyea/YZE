@@ -11,6 +11,7 @@ public:
 	Vector2i lastPos;
 	Vector2i pos;
 	Transform();
+	virtual ~Transform() override;
 	virtual std::ostream& Serialize(std::ostream& os) override;
 	virtual std::istream& Deserialize(std::istream& is) override;
 };

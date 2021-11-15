@@ -15,9 +15,10 @@ Scene::Scene()
 	activeCamera(nullptr) {}
 
 Scene::~Scene() {
+	// for every component type
 	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
-		for (size_t i = 0; i < components[type].size(); i++) {
-			delete components[type][i];
+		for (auto component : components[type]) {
+			delete component;
 		}
 	}
 	delete[] entities;
@@ -137,17 +138,35 @@ Scene* Scene::GetActiveScene() {
 }
 
 std::set<Resource>& Scene::GetRequiredResources(std::set<Resource>& resourcesOut) {
-	// for every component
+	// for every component type
 	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
-		// for every entity
-		for (Entities::Index entity : entities[type]) {
-			// if the entity has that component
-			if (entities[type][entity] >= 0) {
-				// get required resources of that component
-				components[type][entities[type][entity]]->GetRequiredResources(resourcesOut);
-			}
+		// for every component in that type's list
+		for (Components::Index index : entities[type]) {
+
 		}
 	}
+	/*// for every component type
+	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
+		// for every component type
+		for (size_t i = 0; i < components[type].size(); i++) {
+			delete components[type][i];
+		}
+	}
+	// for every entity
+	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
+
+	}
+	// for every component type
+	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
+		// for every component index (at Entity indexes) for this component type
+		for (Components::Index component : entities[type]) {
+			// if the component index is valid
+			if (component >= 0) {
+				// record the required resources of the component at that component index
+				components[type][entities[type][component]]->GetRequiredResources(resourcesOut);
+			}
+		}
+	}*/
 	return resourcesOut;
 }
 
@@ -157,9 +176,10 @@ std::ostream& Scene::Serialize(std::ostream& os) {
 	}
 	{ // Serialize Typemap
 		// TODO: serialize a lookup table between component names and type numbers
+		os << '\n';
 	}
 	{ // Serialize Scene Camera
-		// TODO: activeCamera->Serialize(os) << '\n';
+		os << GetEntityWithComponent(activeCamera) << '\n';
 	}
 	{ // Serialize Required Resources
 		std::set<Resource> resources;
@@ -184,7 +204,15 @@ std::ostream& Scene::Serialize(std::ostream& os) {
 		}
 		os << '\n';
 	}
+	/*
 	{ // Serialize Scene Entities
+		// for every component type
+		for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
+			// for every component index of that type on every entity
+			for (Components::Index index : entities[type]) {
+				
+			}
+		}
 		// for every entity
 		for (Entities::Index entity : entities[0]) {
 			// for every component
@@ -201,6 +229,7 @@ std::ostream& Scene::Serialize(std::ostream& os) {
 	{ // Mark the last line as not an Entity
 		os << Components::INVALID_TYPE;
 	}
+	*/
 	return os;
 }
 
@@ -236,6 +265,21 @@ void Scene::DeleteEntity(Entities::Index entity) {
 			DeleteComponent(type, entity);
 		}
 	}
+}
+
+Entities::Index Scene::GetEntityWithComponent(Component* component) {
+	const Components::TypeID type = component->GetVirtualTypeID();
+	// for every entity
+	for (Entities::Index entity : entities[type]) {
+		// if the entity has that type of component
+		if (entities[type][entity] >= 0) {
+			// if the entity has that specific component
+			if (components[type][entities[type][entity]] == component) {
+				return entity;
+			}
+		}
+	}
+	return Entities::INVALID_INDEX;
 }
 
 Component* Scene::AddComponent(Components::TypeID type, Entities::Index entity) {

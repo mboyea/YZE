@@ -4,6 +4,8 @@ REGISTER_COMPONENT(Transform);
 Transform::Transform()
 	: pos({ 0, 0 }), lastPos({ 0, 0 }) {}
 
+Transform::~Transform() {}
+
 std::ostream& Transform::Serialize(std::ostream& os) {
 	return Component::Serialize(os) << ' ' << pos << ' ' << lastPos;
 }

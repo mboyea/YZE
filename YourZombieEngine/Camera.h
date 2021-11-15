@@ -11,6 +11,7 @@ class Camera : public Component {
 	SDL_Texture* renderTexture;
 public:
 	Camera(Vector2i dim = { 320, 240 });
+	virtual ~Camera() override;
 	SDL_Texture* GetTexture();
 	Vector2i GetDim();
 	void SetDim(Vector2i dim);

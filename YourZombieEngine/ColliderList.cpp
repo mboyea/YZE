@@ -2,6 +2,12 @@
 REGISTER_COMPONENT(ColliderList);
 #include "Files.h"
 
+ColliderList::~ColliderList() {
+	for (Collider* collider : colliders) {
+		delete collider;
+	}
+}
+
 std::ostream& ColliderList::Serialize(std::ostream& os) {
 	Component::Serialize(os);
 	for (Collider* collider : colliders) {
