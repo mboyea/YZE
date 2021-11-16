@@ -17,7 +17,8 @@ Scene::Scene()
 Scene::~Scene() {
 	// for every component type
 	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
-		for (auto component : components[type]) {
+		// for every component of that type
+		for (Component* component : components[type]) {
 			delete component;
 		}
 	}
@@ -140,33 +141,11 @@ Scene* Scene::GetActiveScene() {
 std::set<Resource>& Scene::GetRequiredResources(std::set<Resource>& resourcesOut) {
 	// for every component type
 	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
-		// for every component in that type's list
-		for (Components::Index index : entities[type]) {
-
+		// for every component of that type
+		for (Component* component : components[type]) {
+			component->GetRequiredResources(resourcesOut);
 		}
 	}
-	/*// for every component type
-	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
-		// for every component type
-		for (size_t i = 0; i < components[type].size(); i++) {
-			delete components[type][i];
-		}
-	}
-	// for every entity
-	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
-
-	}
-	// for every component type
-	for (Components::TypeID type = 0; type < Components::GetTypeCount(); type++) {
-		// for every component index (at Entity indexes) for this component type
-		for (Components::Index component : entities[type]) {
-			// if the component index is valid
-			if (component >= 0) {
-				// record the required resources of the component at that component index
-				components[type][entities[type][component]]->GetRequiredResources(resourcesOut);
-			}
-		}
-	}*/
 	return resourcesOut;
 }
 

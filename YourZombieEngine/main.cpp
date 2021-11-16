@@ -26,57 +26,62 @@ int main(int argc, char** argv) {
 	Fonts::Init("Resources/Fonts/m5x7.ttf");
 	Audio::Init();
 
-	Scene scene = Scene();
+	Textures::Load("Textures/320x240.png");
+	Textures::Load("Textures/tiles.png");
 
-	Entities::Index cameraEntity = scene.AddEntity();
-	scene.AddComponent<Transform>(cameraEntity);
-	scene.activeCamera = scene.AddComponent<Camera>(cameraEntity);
-	scene.activeCamera->SetDim({ 128, 96 });
-	Window::SetRenderTarget(scene.activeCamera->GetTexture());
+	Scene* scene = new Scene;
 
-	Entities::Index playerEntity = scene.AddEntity();
-	scene.AddComponent<Transform>(playerEntity);
-	Sprite* playerSprite = scene.AddComponent<Sprite>(playerEntity);
-	ScriptList* playerScriptList = scene.AddComponent<ScriptList>(playerEntity);
+	Entities::Index cameraEntity = scene->AddEntity();
+	scene->AddComponent<Transform>(cameraEntity);
+	scene->activeCamera = scene->AddComponent<Camera>(cameraEntity);
+	scene->activeCamera->SetDim({ 128, 96 });
+	Window::SetRenderTarget(scene->activeCamera->GetTexture());
+
+	Entities::Index playerEntity = scene->AddEntity();
+	scene->AddComponent<Transform>(playerEntity);
+	Sprite* playerSprite = scene->AddComponent<Sprite>(playerEntity);
+	ScriptList* playerScriptList = scene->AddComponent<ScriptList>(playerEntity);
 	PlayerScript* playerScript = Scripts::NewScript<PlayerScript>();
 	playerScriptList->scripts.push_back(playerScript);
-	ColliderList* playerColliderList = scene.AddComponent<ColliderList>(playerEntity);
+	ColliderList* playerColliderList = scene->AddComponent<ColliderList>(playerEntity);
 	BoxCollider* playerCollider = Colliders::New<BoxCollider>();
 	playerSprite->dim = { 16, 16 };
+	playerSprite->texture = Textures::GetTexture("320x240");
 	playerCollider->SetBox({ 0, 0, playerSprite->dim.x, playerSprite->dim.y });
 	playerCollider->doSolveCollision = true;
 	playerColliderList->colliders.push_back(playerCollider);
 
-	Entities::Index enemyEntitiy = scene.AddEntity();
-	Transform* enemyTransform = scene.AddComponent<Transform>(enemyEntitiy);
-	Sprite* enemySprite = scene.AddComponent<Sprite>(enemyEntitiy);
-	ScriptList* enemyScriptList = scene.AddComponent<ScriptList>(enemyEntitiy);
+	Entities::Index enemyEntitiy = scene->AddEntity();
+	Transform* enemyTransform = scene->AddComponent<Transform>(enemyEntitiy);
+	Sprite* enemySprite = scene->AddComponent<Sprite>(enemyEntitiy);
+	ScriptList* enemyScriptList = scene->AddComponent<ScriptList>(enemyEntitiy);
 	TestScript* enemyScript = Scripts::NewScript<TestScript>();
 	enemyScriptList->scripts.push_back(enemyScript);
-	ColliderList* enemyColliderList = scene.AddComponent<ColliderList>(enemyEntitiy);
+	ColliderList* enemyColliderList = scene->AddComponent<ColliderList>(enemyEntitiy);
 	BoxCollider* enemyCollider = Colliders::New<BoxCollider>();
 	enemyTransform->pos = { 64, 32 };
 	enemySprite->dim = { 24, 8 };
+	enemySprite->texture = Textures::GetTexture("tiles");
 	enemyCollider->SetBox({ 0, 0, enemySprite->dim.x, enemySprite->dim.y });
 	enemyCollider->doSolveCollision = true;
 	enemyColliderList->colliders.push_back(enemyCollider);
 
-	scene.Serialize(std::cout);
+	scene->Serialize(std::cout);
 
-	while (false) {
+	while (true) {
 		Window::HandleEvents();
 		Input::HandleEvents();
 
-		scene.Update();
-		scene.DoCollisions();
-		scene.LateUpdate();
+		scene->Update();
+		scene->DoCollisions();
+		scene->LateUpdate();
 		Window::SetDrawColor(Colors::LIGHT_GREY);
 		Window::Paint();
-		scene.Render();
+		scene->Render();
 
 		Window::PresentWindow();
 		Time::LimitFramerate(24);
 	}
-	// delete &scene;
+	delete scene;
 	return 0;
 }
