@@ -1,6 +1,6 @@
 Your Zombie Engine
 ===
-A 2D C++ SDL2 game engine.
+A simple C++ SDL2 game engine.
 ---
 This is a 2D game engine built using nothing but C++ and SDL2. It is an unfinished project from highschool.
 
