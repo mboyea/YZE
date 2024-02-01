@@ -1,4 +1,4 @@
-Your Zombie Game Engine
+Zombie Game Engine
 ===
 A simple C++ SDL2 game engine.
 ---
